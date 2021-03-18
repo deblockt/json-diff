@@ -18,12 +18,12 @@ maven
 
 example:
 ```java
-final var expectedJson = "{\"foo\": \"bar\"}";
-final var receivedJson = "{\"foo\": \"foo\"}";
+final var expectedJson = "{\"foo\": \"bar\", \"bar\": \"bar\", \"numberMatch\": 10.0, \"numberUnmatched\": 10.01}";
+final var receivedJson = "{\"foo\": \"foo\", \"bar\": \"bar\", \"numberMatch\": 10, \"numberUnmatched\": 10.02}";
 
 // define your matcher
 // CompositeJsonMatcher use other matcher to perform matching on objects, list or primitive
-final var jsonMatcher = new CompositeJsonMatcher( 
+final var jsonMatcher = new CompositeJsonMatcher(
     new LenientJsonArrayPartialMatcher(), // comparing array using lenient mode (ignore array order and extra items)
     new LenientJsonObjectPartialMatcher(), // comparing object using lenient mode (ignoring extra properties)
     new PrimitivePartialMatcher()
@@ -43,7 +43,9 @@ System.out.println(jsondiff.similarityRate());
 ```
 Result:
 ```
+The item "$.numberUnmatched" didn't match. Expected "10.01", Received: "10.02"
 The item "$.foo" didn't match. Expected "bar", Received: "foo"
-50.0
+
+75.0
 ```
 
