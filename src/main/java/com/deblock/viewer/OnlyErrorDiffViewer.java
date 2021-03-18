@@ -25,7 +25,7 @@ public class OnlyErrorDiffViewer implements JsonDiffViewer {
 
     @Override
     public void primaryNonMatching(Path path, Object expected, Object value) {
-        stringBuilder.append("The item \"" + path + "\" didn't match. Expected \"" + expected + "\", Received: \"" + value + "\"");
+        stringBuilder.append("The item \"" + path + "\" didn't match. Expected \"" + expected + "\", Received: \"" + value + "\"\n");
     }
 
     public String toString() {
