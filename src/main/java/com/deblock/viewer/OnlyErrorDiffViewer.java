@@ -2,6 +2,7 @@ package com.deblock.viewer;
 
 import com.deblock.diff.JsonDiff;
 import com.deblock.matcher.Path;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * List all error on a string
@@ -19,13 +20,20 @@ public class OnlyErrorDiffViewer implements JsonDiffViewer {
     }
 
     @Override
-    public void missingProperty(Path path, Object value) {
-        stringBuilder.append("The item \"" + path + "\" is not found.\n");
+    public void missingProperty(Path path, JsonNode value) {
+        stringBuilder
+                .append("The property \"")
+                .append(path)
+                .append("\" is not found\n");
     }
 
     @Override
-    public void primaryNonMatching(Path path, Object expected, Object value) {
-        stringBuilder.append("The item \"" + path + "\" didn't match. Expected \"" + expected + "\", Received: \"" + value + "\"\n");
+    public void primaryNonMatching(Path path, JsonNode expected, JsonNode value) {
+        stringBuilder
+                .append("The property \"").append(path)
+                .append("\" didn't match. Expected ").append(expected)
+                .append(", Received: ").append(value)
+                .append("\n");
     }
 
     public String toString() {

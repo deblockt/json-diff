@@ -2,12 +2,13 @@ package com.deblock.diff;
 
 import com.deblock.matcher.Path;
 import com.deblock.viewer.JsonDiffViewer;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class JsonArrayDiff implements JsonDiff {
-    private final Map<Integer, Object> valuesWithoutMatch = new HashMap<>();
+    private final Map<Integer, JsonNode> valuesWithoutMatch = new HashMap<>();
     private final Map<Integer, JsonDiff> valuesWithMatch = new HashMap<>();
     private final Path path;
 
@@ -15,7 +16,7 @@ public class JsonArrayDiff implements JsonDiff {
         this.path = path;
     }
 
-    public void addNoMatch(int index, Object expectedValue) {
+    public void addNoMatch(int index, JsonNode expectedValue) {
         this.valuesWithoutMatch.put(index, expectedValue);
     }
 
