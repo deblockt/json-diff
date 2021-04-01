@@ -4,10 +4,10 @@ import com.deblock.diff.JsonDiff;
 import com.deblock.matcher.JsonMatcher;
 import com.deblock.matcher.Path;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DiffGenerator {
@@ -24,9 +24,9 @@ public class DiffGenerator {
             .collect(Collectors.toList());
     }
 
-    private static Object read(String json) {
+    private static JsonNode read(String json) {
         try {
-            return OBJECT_MAPPER.readValue(json, Map.class);
+            return OBJECT_MAPPER.readTree(json);
         } catch (JsonProcessingException e) {
             throw new JsonReadException(e);
         }

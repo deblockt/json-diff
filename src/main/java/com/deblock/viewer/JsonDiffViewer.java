@@ -2,6 +2,7 @@ package com.deblock.viewer;
 
 import com.deblock.diff.JsonDiff;
 import com.deblock.matcher.Path;
+import com.fasterxml.jackson.databind.JsonNode;
 
 public interface JsonDiffViewer {
 
@@ -9,7 +10,7 @@ public interface JsonDiffViewer {
 
     void nonMatchingProperty(JsonDiff diff);
 
-    void missingProperty(Path path, Object value);
+    void missingProperty(Path path, JsonNode value);
 
-    void primaryNonMatching(Path path, Object expected, Object value);
+    void primaryNonMatching(Path path, JsonNode expected, JsonNode value);
 }

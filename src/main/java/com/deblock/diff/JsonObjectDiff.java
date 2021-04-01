@@ -2,6 +2,7 @@ package com.deblock.diff;
 
 import com.deblock.matcher.Path;
 import com.deblock.viewer.JsonDiffViewer;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +12,7 @@ public class JsonObjectDiff implements JsonDiff {
     private final static int VALUE_MAX_RATIO = 50;
 
     private final Map<String, JsonDiff> propertiesDiff = new HashMap<>();
-    private final Map<String, Object> notFoundProperties = new HashMap<>();
+    private final Map<String, JsonNode> notFoundProperties = new HashMap<>();
 
     private final Path path;
 
@@ -19,7 +20,7 @@ public class JsonObjectDiff implements JsonDiff {
         this.path = path;
     }
 
-    public void addNotFoundProperty(String propertyName, Object value) {
+    public void addNotFoundProperty(String propertyName, JsonNode value) {
         notFoundProperties.put(propertyName, value);
     }
 
