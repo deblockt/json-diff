@@ -33,6 +33,10 @@ public class JsonObjectDiff implements JsonDiff {
         final var notFoundPropertiesCount = notFoundProperties.keySet().size();
         final var totalPropertiesCount = propertiesDiff.keySet().size() + notFoundPropertiesCount;
 
+        if (totalPropertiesCount == 0) {
+            return 100;
+        }
+
         final var propertiesSimilarityRate = propertiesDiff.values().stream()
                 .mapToDouble(JsonDiff::similarityRate)
                 .sum();

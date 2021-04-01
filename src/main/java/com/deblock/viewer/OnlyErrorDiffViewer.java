@@ -9,10 +9,15 @@ import com.fasterxml.jackson.databind.JsonNode;
  * call .toString to get the error string
  */
 public class OnlyErrorDiffViewer implements JsonDiffViewer {
-    private StringBuilder stringBuilder = new StringBuilder();
+    private final StringBuilder stringBuilder = new StringBuilder();
 
     @Override
     public void matchingProperty(JsonDiff value) { }
+
+    @Override
+    public void primaryMatching(Path path, JsonNode value) {
+
+    }
 
     @Override
     public void nonMatchingProperty(JsonDiff diff) {
