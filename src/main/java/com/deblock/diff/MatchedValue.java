@@ -19,7 +19,9 @@ public class MatchedValue implements JsonDiff {
     }
 
     @Override
-    public void display(JsonDiffViewer viewer) { }
+    public void display(JsonDiffViewer viewer) {
+        viewer.primaryMatching(path, value);
+    }
 
     @Override
     public Path path() {

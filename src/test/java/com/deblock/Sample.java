@@ -3,10 +3,10 @@ package com.deblock;
 import com.deblock.matcher.*;
 import com.deblock.viewer.OnlyErrorDiffViewer;
 
-public class Test {
+public class Sample {
     public static void main(String[] args) {
         final var expectedJson = "{\"additionalProperty\":\"a\", \"foo\": \"bar\", \"bar\": \"bar\", \"numberMatch\": 10.0, \"numberUnmatched\": 10.01, \"arrayMatch\": [{\"b\":\"a\"}], \"arrayUnmatched\": [{\"b\":\"a\"}]}";
-        final var receivedJson = "{\"foo\": \"foo\", \"bar\": \"bar\", \"numberMatch\": 10, \"numberUnmatched\": 10.02, \"arrayMatch\": [{\"b\":\"a\"}], \"arrayUnmatched\": [{\"b\":\"b\"}]}";
+        final var receivedJson = "{\"foo\": \"foo\", \"bar\": \"bar\", \"numberMatch\": 10, \"numberUnmatched\": 10.02, \"arrayMatch\": [{\"b\":\"a\"}], \"arrayUnmatched\": {\"b\":\"b\"}}";
 
         // define your matcher
         // CompositeJsonMatcher use other matcher to perform matching on objects, list or primitive

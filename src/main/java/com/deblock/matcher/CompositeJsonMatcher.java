@@ -27,8 +27,10 @@ public class CompositeJsonMatcher implements JsonMatcher {
             return this.jsonObjectPartialMatcher.jsonDiff(path, (ObjectNode) expected, (ObjectNode) received, this);
         } else if (expected instanceof ArrayNode && received instanceof ArrayNode) {
             return this.jsonArrayPartialMatcher.jsonDiff(path, (ArrayNode) expected, (ArrayNode) received, this);
-        } else {
+        } else if (expected instanceof ValueNode && received instanceof ValueNode){
             return this.primitivePartialMatcher.jsonDiff(path, (ValueNode) expected, (ValueNode) received, this);
+        } else {
+            return new UnMatchedValue(path, expected, received);
         }
     }
 
