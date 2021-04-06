@@ -10,7 +10,7 @@ import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 
-public class PrimitivePartialMatcherTest {
+public class StrictPrimitivePartialMatcherTest {
     private final static Path expectedPath = new Path.ChainedPath(Path.Root.INSTANCE, "property");
 
     @Test
@@ -18,7 +18,7 @@ public class PrimitivePartialMatcherTest {
         final var string1 = TextNode.valueOf("a");
         final var string2 = TextNode.valueOf("a");
 
-        final var jsonDiff = new PrimitivePartialMatcher().jsonDiff(expectedPath, string1, string2, Mockito.mock(JsonMatcher.class));
+        final var jsonDiff = new StrictPrimitivePartialMatcher().jsonDiff(expectedPath, string1, string2, Mockito.mock(JsonMatcher.class));
 
         assertEquals(100, jsonDiff.similarityRate());
         assertEquals(expectedPath, jsonDiff.path());
@@ -32,7 +32,7 @@ public class PrimitivePartialMatcherTest {
         final var string1 = TextNode.valueOf("a");
         final var string2 = TextNode.valueOf("c");
 
-        final var jsonDiff = new PrimitivePartialMatcher().jsonDiff(expectedPath, string1, string2, Mockito.mock(JsonMatcher.class));
+        final var jsonDiff = new StrictPrimitivePartialMatcher().jsonDiff(expectedPath, string1, string2, Mockito.mock(JsonMatcher.class));
 
         assertEquals(0, jsonDiff.similarityRate());
         assertEquals(expectedPath, jsonDiff.path());
@@ -46,7 +46,7 @@ public class PrimitivePartialMatcherTest {
         final var number1 = DecimalNode.valueOf(BigDecimal.valueOf(101, 1));
         final var number2 = DecimalNode.valueOf(BigDecimal.valueOf(101, 1));
 
-        final var jsonDiff = new PrimitivePartialMatcher().jsonDiff(expectedPath, number1, number2, Mockito.mock(JsonMatcher.class));
+        final var jsonDiff = new StrictPrimitivePartialMatcher().jsonDiff(expectedPath, number1, number2, Mockito.mock(JsonMatcher.class));
 
         assertEquals(100, jsonDiff.similarityRate());
         assertEquals(expectedPath, jsonDiff.path());
@@ -56,16 +56,16 @@ public class PrimitivePartialMatcherTest {
     }
 
     @Test
-    public void shouldReturnAMatchIfNodeAreEqualsNumbersWithDifferentType() {
+    public void shouldReturnANonMatchIfNodeAreEqualsNumbersWithDifferentType() {
         final var number1 = IntNode.valueOf(100);
         final var number2 = DecimalNode.valueOf(BigDecimal.valueOf(1000, 1));
 
-        final var jsonDiff = new PrimitivePartialMatcher().jsonDiff(expectedPath, number1, number2, Mockito.mock(JsonMatcher.class));
+        final var jsonDiff = new StrictPrimitivePartialMatcher().jsonDiff(expectedPath, number1, number2, Mockito.mock(JsonMatcher.class));
 
-        assertEquals(100, jsonDiff.similarityRate());
+        assertEquals(0, jsonDiff.similarityRate());
         assertEquals(expectedPath, jsonDiff.path());
         new JsonDiffAsserter()
-                .assertPrimaryMatching(expectedPath)
+                .assertPrimaryNonMatching(expectedPath)
                 .validate(jsonDiff);
     }
 
@@ -74,7 +74,7 @@ public class PrimitivePartialMatcherTest {
         final var number1 = DecimalNode.valueOf(BigDecimal.valueOf(1000, 1));
         final var number2 = DecimalNode.valueOf(BigDecimal.valueOf(1001, 1));
 
-        final var jsonDiff = new PrimitivePartialMatcher().jsonDiff(expectedPath, number1, number2, Mockito.mock(JsonMatcher.class));
+        final var jsonDiff = new StrictPrimitivePartialMatcher().jsonDiff(expectedPath, number1, number2, Mockito.mock(JsonMatcher.class));
 
         assertEquals(0, jsonDiff.similarityRate());
         assertEquals(expectedPath, jsonDiff.path());
@@ -88,7 +88,7 @@ public class PrimitivePartialMatcherTest {
         final var number1 = DecimalNode.valueOf(BigDecimal.valueOf(1000, 1));
         final var number2 = DecimalNode.valueOf(BigDecimal.valueOf(2000, 1));
 
-        final var jsonDiff = new PrimitivePartialMatcher().jsonDiff(expectedPath, number1, number2, Mockito.mock(JsonMatcher.class));
+        final var jsonDiff = new StrictPrimitivePartialMatcher().jsonDiff(expectedPath, number1, number2, Mockito.mock(JsonMatcher.class));
 
         assertEquals(0, jsonDiff.similarityRate());
         assertEquals(expectedPath, jsonDiff.path());
@@ -102,7 +102,7 @@ public class PrimitivePartialMatcherTest {
         final var value1 = IntNode.valueOf(100);
         final var value2 = TextNode.valueOf("100");
 
-        final var jsonDiff = new PrimitivePartialMatcher().jsonDiff(expectedPath, value1, value2, Mockito.mock(JsonMatcher.class));
+        final var jsonDiff = new StrictPrimitivePartialMatcher().jsonDiff(expectedPath, value1, value2, Mockito.mock(JsonMatcher.class));
 
         assertEquals(0, jsonDiff.similarityRate());
         assertEquals(expectedPath, jsonDiff.path());
@@ -116,7 +116,7 @@ public class PrimitivePartialMatcherTest {
         final var boolean1 = BooleanNode.valueOf(true);
         final var boolean2 = BooleanNode.valueOf(true);
 
-        final var jsonDiff = new PrimitivePartialMatcher().jsonDiff(expectedPath, boolean1, boolean2, Mockito.mock(JsonMatcher.class));
+        final var jsonDiff = new StrictPrimitivePartialMatcher().jsonDiff(expectedPath, boolean1, boolean2, Mockito.mock(JsonMatcher.class));
 
         assertEquals(100, jsonDiff.similarityRate());
         assertEquals(expectedPath, jsonDiff.path());
@@ -130,7 +130,7 @@ public class PrimitivePartialMatcherTest {
         final var boolean1 = BooleanNode.valueOf(true);
         final var boolean2 = BooleanNode.valueOf(false);
 
-        final var jsonDiff = new PrimitivePartialMatcher().jsonDiff(expectedPath, boolean1, boolean2, Mockito.mock(JsonMatcher.class));
+        final var jsonDiff = new StrictPrimitivePartialMatcher().jsonDiff(expectedPath, boolean1, boolean2, Mockito.mock(JsonMatcher.class));
 
         assertEquals(0, jsonDiff.similarityRate());
         assertEquals(expectedPath, jsonDiff.path());
