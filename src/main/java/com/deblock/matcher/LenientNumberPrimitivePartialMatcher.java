@@ -6,9 +6,12 @@ import com.deblock.diff.UnMatchedValue;
 import com.fasterxml.jackson.databind.node.NumericNode;
 import com.fasterxml.jackson.databind.node.ValueNode;
 
-import java.util.Objects;
+public class LenientNumberPrimitivePartialMatcher implements PartialJsonMatcher<ValueNode> {
+    private final PartialJsonMatcher<ValueNode> delegated;
 
-public class PrimitivePartialMatcher implements PartialJsonMatcher<ValueNode> {
+    public LenientNumberPrimitivePartialMatcher(PartialJsonMatcher<ValueNode> delegated) {
+        this.delegated = delegated;
+    }
 
     @Override
     public JsonDiff jsonDiff(Path path, ValueNode expectedValue, ValueNode receivedValue, JsonMatcher jsonMatcher) {
@@ -25,10 +28,6 @@ public class PrimitivePartialMatcher implements PartialJsonMatcher<ValueNode> {
             }
         }
 
-        if (Objects.equals(expectedValue, receivedValue)) {
-            return new MatchedValue(path, expectedValue);
-        } else {
-            return new UnMatchedValue(path, expectedValue, receivedValue);
-        }
+        return delegated.jsonDiff(path, expectedValue, receivedValue, jsonMatcher);
     }
 }
