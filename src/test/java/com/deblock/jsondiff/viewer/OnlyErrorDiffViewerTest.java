@@ -2,6 +2,7 @@ package com.deblock.jsondiff.viewer;
 
 import com.deblock.jsondiff.diff.JsonObjectDiff;
 import com.deblock.jsondiff.diff.MatchedPrimaryDiff;
+import com.deblock.jsondiff.diff.UnMatchedPrimaryDiff;
 import com.deblock.jsondiff.matcher.Path;
 import com.fasterxml.jackson.databind.node.TextNode;
 import org.junit.jupiter.api.Test;
@@ -26,5 +27,15 @@ public class OnlyErrorDiffViewerTest {
         final var expected = "The property \"$.a.b.c\" is not found\n" +
                 "The property \"$.a.c\" didn't match. Expected \"a\", Received: \"b\"\n";
         assertEquals(expected, viewer.toString());
+    }
+
+    @Test
+    public void canBuildAnOnlyErrorDiffViewerFromJsonDiff() {
+        final var jsonDiff = new UnMatchedPrimaryDiff(path, TextNode.valueOf("a"), TextNode.valueOf("b"));
+
+        final var result = OnlyErrorDiffViewer.from(jsonDiff);
+
+        final var expected = "The property \"$.a\" didn't match. Expected \"a\", Received: \"b\"\n";
+        assertEquals(expected, result.toString());
     }
 }
