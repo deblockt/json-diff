@@ -44,4 +44,10 @@ public class OnlyErrorDiffViewer implements JsonDiffViewer {
     public String toString() {
         return stringBuilder.toString();
     }
+
+    public static JsonDiffViewer from(JsonDiff jsonDiff) {
+        final var result = new OnlyErrorDiffViewer();
+        jsonDiff.display(result);
+        return result;
+    }
 }

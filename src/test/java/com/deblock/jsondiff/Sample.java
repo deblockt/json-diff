@@ -20,11 +20,10 @@ public class Sample {
         final var jsondiff = DiffGenerator.diff(expectedJson, receivedJson, jsonMatcher);
 
         // use the viewer to collect diff data
-        final var viewer = new OnlyErrorDiffViewer();
-        jsondiff.display(viewer);
+        final var errorsResult= OnlyErrorDiffViewer.from(jsondiff);
 
         // print the diff result
-        System.out.println(viewer);
+        System.out.println(errorsResult);
         // print a similarity ratio between expected and received json (0 <= ratio <= 100)
         System.out.println(jsondiff.similarityRate());
     }
