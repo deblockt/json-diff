@@ -6,7 +6,7 @@
 
     <groupId>io.github.deblockt</groupId>
     <artifactId>json-diff</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <name>json-diff</name>
     <description>A customizable lib to perform a json-diff</description>
     <url>https://github.com/deblockt/json-diff</url>
