@@ -29,7 +29,15 @@ public class OnlyErrorDiffViewer implements JsonDiffViewer {
         stringBuilder
                 .append("The property \"")
                 .append(path)
-                .append("\" is not found\n");
+                .append("\" in the expected json is not found\n");
+    }
+
+    @Override
+    public void extraProperty(Path path, JsonNode extraReceivedValue) {
+        stringBuilder
+                .append("The property \"")
+                .append(path)
+                .append("\" in the received json is not expected\n");
     }
 
     @Override

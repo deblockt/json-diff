@@ -1,5 +1,6 @@
 package com.deblock.jsondiff.viewer;
 
+import com.deblock.jsondiff.diff.JsonArrayDiff;
 import com.deblock.jsondiff.diff.JsonObjectDiff;
 import com.deblock.jsondiff.diff.MatchedPrimaryDiff;
 import com.deblock.jsondiff.diff.UnMatchedPrimaryDiff;
@@ -23,11 +24,14 @@ public class OnlyErrorDiffViewerTest {
         viewer.primaryMatching(new Path.ChainedPath(path, "d"), TextNode.valueOf("c"));
         viewer.nonMatchingProperty(jsonObjectDiff);
         viewer.primaryNonMatching(new Path.ChainedPath(path, "c"), TextNode.valueOf("a"), TextNode.valueOf("b"));
+        viewer.extraProperty(new Path.ChainedPath(path, "d"), TextNode.valueOf("d"));
 
-        final var expected = "The property \"$.a.b.c\" is not found\n" +
-                "The property \"$.a.c\" didn't match. Expected \"a\", Received: \"b\"\n";
+        final var expected = "The property \"$.a.b.c\" in the expected json is not found\n" +
+                "The property \"$.a.c\" didn't match. Expected \"a\", Received: \"b\"\n" +
+                "The property \"$.a.d\" in the received json is not expected\n";
         assertEquals(expected, viewer.toString());
     }
+
 
     @Test
     public void canBuildAnOnlyErrorDiffViewerFromJsonDiff() {

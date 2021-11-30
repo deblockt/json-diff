@@ -10,6 +10,7 @@ import java.util.Map;
 public class JsonArrayDiff implements JsonDiff {
     private final Map<Integer, JsonNode> valuesWithoutMatch = new HashMap<>();
     private final Map<Integer, JsonDiff> valuesWithMatch = new HashMap<>();
+    private final Map<Integer, JsonNode> extraValues = new HashMap<>();
     private final Path path;
 
     public JsonArrayDiff(Path path) {
@@ -24,9 +25,13 @@ public class JsonArrayDiff implements JsonDiff {
         this.valuesWithMatch.put(index, jsonDiff);
     }
 
+    public void addExtraItem(int index, JsonNode extraReceivedValue) {
+        this.extraValues.put(index, extraReceivedValue);
+    }
+
     @Override
     public double similarityRate() {
-        final var totalArraySize = valuesWithoutMatch.size() + valuesWithMatch.size();
+        final var totalArraySize = valuesWithoutMatch.size() + valuesWithMatch.size() + this.extraValues.size();
         final var totalSimilarityRate = valuesWithMatch.values().stream()
                 .mapToDouble(JsonDiff::similarityRate)
                 .sum();
@@ -46,6 +51,10 @@ public class JsonArrayDiff implements JsonDiff {
 
         for (final var valuesWithoutMatch : valuesWithoutMatch.entrySet()) {
             viewer.missingProperty(new Path.ChainedPath(path(), String.valueOf(valuesWithoutMatch.getKey())), valuesWithoutMatch.getValue());
+        }
+
+        for (final var extraItem: extraValues.entrySet()) {
+            viewer.extraProperty(new Path.ChainedPath(path(), String.valueOf(extraItem.getKey())), extraItem.getValue());
         }
     }
 
