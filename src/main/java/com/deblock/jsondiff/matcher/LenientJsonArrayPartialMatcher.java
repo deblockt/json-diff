@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class LenientJsonArrayPartialMatcher implements PartialJsonMatcher<ArrayNode> {
     @Override
@@ -42,6 +43,11 @@ public class LenientJsonArrayPartialMatcher implements PartialJsonMatcher<ArrayN
             }
         }
 
+        if (alreadyMatchedIndex.size() < receivedValues.size()) {
+            final var receivedIndex = IntStream.range(0, receivedValues.size()).boxed().collect(Collectors.toList());
+            receivedIndex.removeAll(alreadyMatchedIndex);
+            receivedIndex.forEach(index -> diff.addExtraItem(index, receivedValues.get(index)));
+        }
         return diff;
     }
 

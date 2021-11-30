@@ -12,6 +12,8 @@ public interface JsonDiffViewer {
 
     void missingProperty(Path path, JsonNode value);
 
+    void extraProperty(Path path, JsonNode extraReceivedValue);
+
     void primaryNonMatching(Path path, JsonNode expected, JsonNode value);
 
     void primaryMatching(Path path, JsonNode value);

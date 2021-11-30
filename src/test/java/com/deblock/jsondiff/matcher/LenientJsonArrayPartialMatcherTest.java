@@ -84,19 +84,21 @@ public class LenientJsonArrayPartialMatcherTest {
     }
 
     @Test
-    public void shouldIgnoreExtraItems() {
-        final var array1 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b")));
-        final var array2 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b"), TextNode.valueOf("c")));
+    public void shouldReturnPartialMatchWhenExtraItems() {
+        final var array1 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("c")));
+        final var array2 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b"), TextNode.valueOf("c"), TextNode.valueOf("d")));
         final var jsonMatcher = Mockito.mock(JsonMatcher.class);
         Mockito.when(jsonMatcher.diff(any(), any(), any())).thenAnswer(this::matchByEquality);
 
         final var result = new LenientJsonArrayPartialMatcher().jsonDiff(path, array1, array2, jsonMatcher);
 
-        assertEquals(100, result.similarityRate());
+        assertEquals(50, result.similarityRate());
         assertEquals(path, result.path());
         new JsonDiffAsserter()
                 .assertMatchingProperty(new Path.ChainedPath(path, "0"))
-                .assertMatchingProperty(new Path.ChainedPath(path, "1"))
+                .assertMatchingProperty(new Path.ChainedPath(path, "1")) // the path of matching prop is the path on the expected object
+                .assertExtraProperty(new Path.ChainedPath(path, "1")) // the path of extra property is the path on the received object not on the expected
+                .assertExtraProperty(new Path.ChainedPath(path, "3"))
                 .validate(result);
     }
 

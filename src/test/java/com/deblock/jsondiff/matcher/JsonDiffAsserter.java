@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 
 public class JsonDiffAsserter implements JsonDiffViewer {
     private final List<NotFoundAsserter> missingPropertyAsserters = new ArrayList<>();
+    private final List<ExtraPropertyAsserter> extraPropertyAsserters = new ArrayList<>();
     private final List<NonMatchingPropertyAsserter> nonMatchingPropertyAsserters = new ArrayList<>();
     private final List<MatchingPropertyAsserter> matchingPropertyAsserters = new ArrayList<>();
     private final List<PrimaryNonMatchingAsserter> primaryNonMatchingAsserters = new ArrayList<>();
@@ -48,6 +49,16 @@ public class JsonDiffAsserter implements JsonDiffViewer {
     }
 
     @Override
+    public void extraProperty(Path path, JsonNode extraReceivedValue) {
+        for (final var asserter: extraPropertyAsserters) {
+            if (asserter.done(path)) {
+                return;
+            }
+        }
+        throw new AssertionError("Non expected extra property " + path);
+    }
+
+    @Override
     public void primaryNonMatching(Path path, JsonNode expected, JsonNode value) {
         for (final var asserter : primaryNonMatchingAsserters) {
             if (asserter.done(path)) {
@@ -70,7 +81,7 @@ public class JsonDiffAsserter implements JsonDiffViewer {
     public void validate(JsonDiff jsonDiff) {
         jsonDiff.display(this);
 
-        final var allErrors = Stream.of(missingPropertyAsserters, nonMatchingPropertyAsserters, matchingPropertyAsserters, primaryNonMatchingAsserters)
+        final var allErrors = Stream.of(missingPropertyAsserters, nonMatchingPropertyAsserters, matchingPropertyAsserters, primaryNonMatchingAsserters, extraPropertyAsserters)
                 .flatMap(Collection::stream)
                 .filter(asserter -> !asserter.isDone())
                 .map(Asserter::getError)
@@ -106,9 +117,41 @@ public class JsonDiffAsserter implements JsonDiffViewer {
         return this;
     }
 
+    public JsonDiffAsserter assertExtraProperty(Path path) {
+        this.extraPropertyAsserters.add(new ExtraPropertyAsserter(path));
+        return this;
+    }
+
     interface Asserter {
         boolean isDone();
         String getError();
+    }
+
+    class ExtraPropertyAsserter implements Asserter {
+        private final Path path;
+        private boolean done = false;
+
+        public ExtraPropertyAsserter(Path path) {
+            this.path = path;
+        }
+
+        public boolean done(Path path) {
+            if (this.path.equals(path)) {
+                this.done = true;
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public boolean isDone() {
+            return this.done;
+        }
+
+        @Override
+        public String getError() {
+            return "Expected an extra property " + path;
+        }
     }
 
     class NotFoundAsserter implements Asserter {
