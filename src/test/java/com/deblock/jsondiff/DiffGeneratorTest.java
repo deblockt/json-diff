@@ -34,7 +34,7 @@ public class DiffGeneratorTest {
         final var receivedJson = "\"string1\"";
         final var matcher = Mockito.mock(JsonMatcher.class);
         final var diff = Mockito.mock(JsonDiff.class);
-        Mockito.when(matcher.diff(Path.Root.INSTANCE, TextNode.valueOf("string1"), TextNode.valueOf("string1"))).thenReturn(diff);
+        Mockito.when(matcher.diff(Path.ROOT, TextNode.valueOf("string1"), TextNode.valueOf("string1"))).thenReturn(diff);
 
         final var result = DiffGenerator.diff(expectedJson, receivedJson, matcher);
 
@@ -48,7 +48,7 @@ public class DiffGeneratorTest {
         final var jsonNode = new ArrayNode(null, List.of(TextNode.valueOf("string1")));
         final var matcher = Mockito.mock(JsonMatcher.class);
         final var diff = Mockito.mock(JsonDiff.class);
-        Mockito.when(matcher.diff(Path.Root.INSTANCE, jsonNode, jsonNode)).thenReturn(diff);
+        Mockito.when(matcher.diff(Path.ROOT, jsonNode, jsonNode)).thenReturn(diff);
 
         final var result = DiffGenerator.diff(expectedJson, receivedJson, matcher);
 
@@ -62,7 +62,7 @@ public class DiffGeneratorTest {
         final var jsonNode = new ObjectNode(null, Map.of("a", TextNode.valueOf("string1")));
         final var matcher = Mockito.mock(JsonMatcher.class);
         final var diff = Mockito.mock(JsonDiff.class);
-        Mockito.when(matcher.diff(Path.Root.INSTANCE, jsonNode, jsonNode)).thenReturn(diff);
+        Mockito.when(matcher.diff(Path.ROOT, jsonNode, jsonNode)).thenReturn(diff);
 
         final var result = DiffGenerator.diff(expectedJson, receivedJson, matcher);
 

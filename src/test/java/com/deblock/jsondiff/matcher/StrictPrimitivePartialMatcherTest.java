@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class StrictPrimitivePartialMatcherTest {
-    private final static Path expectedPath = new Path.ChainedPath(Path.Root.INSTANCE, "property");
+    private final static Path expectedPath = Path.ROOT.add(Path.PathItem.of("property"));
 
     @Test
     public void shouldReturnAFullMatchIfNodeAreEqualsString() {

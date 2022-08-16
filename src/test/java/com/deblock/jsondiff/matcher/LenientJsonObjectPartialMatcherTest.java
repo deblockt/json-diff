@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 
 public class LenientJsonObjectPartialMatcherTest {
-    private final Path path = new Path.ChainedPath(Path.Root.INSTANCE, "foo");
+    private final Path path = Path.ROOT.add(Path.PathItem.of("foo"));
 
     @Test
     public void shouldReturnFullMatchForTwoEmptyObjects() {
@@ -39,8 +39,8 @@ public class LenientJsonObjectPartialMatcherTest {
         assertEquals(0, result.similarityRate());
         assertEquals(path, result.path());
         new JsonDiffAsserter()
-                .assertMissingProperty(new Path.ChainedPath(path, "a"))
-                .assertMissingProperty(new Path.ChainedPath(path, "b"))
+                .assertMissingProperty(path.add(Path.PathItem.of("a")))
+                .assertMissingProperty(path.add(Path.PathItem.of("b")))
                 .validate(result);
     }
 
@@ -60,8 +60,8 @@ public class LenientJsonObjectPartialMatcherTest {
 
         assertEquals(path, result.path());
         new JsonDiffAsserter()
-                .assertNonMatchingProperty(new Path.ChainedPath(path, "a"))
-                .assertNonMatchingProperty(new Path.ChainedPath(path, "b"))
+                .assertNonMatchingProperty(path.add(Path.PathItem.of("a")))
+                .assertNonMatchingProperty(path.add(Path.PathItem.of("b")))
                 .validate(result);
     }
 
@@ -81,8 +81,8 @@ public class LenientJsonObjectPartialMatcherTest {
 
         assertEquals(path, result.path());
         new JsonDiffAsserter()
-                .assertMatchingProperty(new Path.ChainedPath(path, "a"))
-                .assertMatchingProperty(new Path.ChainedPath(path, "b"))
+                .assertMatchingProperty(path.add(Path.PathItem.of("a")))
+                .assertMatchingProperty(path.add(Path.PathItem.of("b")))
                 .validate(result);
     }
 
@@ -102,9 +102,9 @@ public class LenientJsonObjectPartialMatcherTest {
 
         assertEquals(path, result.path());
         new JsonDiffAsserter()
-                .assertMatchingProperty(new Path.ChainedPath(path, "a"))
-                .assertMissingProperty(new Path.ChainedPath(path, "b"))
-                .assertMissingProperty(new Path.ChainedPath(path, "c"))
+                .assertMatchingProperty(path.add(Path.PathItem.of("a")))
+                .assertMissingProperty(path.add(Path.PathItem.of("b")))
+                .assertMissingProperty(path.add(Path.PathItem.of("c")))
                 .validate(result);
     }
 

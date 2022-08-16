@@ -8,7 +8,7 @@ import org.mockito.Mockito;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CompositeJsonMatcherTest {
-    private final static Path path = new Path.ChainedPath(Path.Root.INSTANCE, "property");
+    private final static Path path = Path.ROOT.add(Path.PathItem.of("property"));
 
     @Test
     public void shouldCallTheArrayMatcherIfTheTwoObjectAreArray() {
