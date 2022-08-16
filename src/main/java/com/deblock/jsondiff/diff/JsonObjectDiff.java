@@ -54,13 +54,13 @@ public class JsonObjectDiff implements JsonDiff {
     @Override
     public void display(JsonDiffViewer viewer) {
         for (final var entry : notFoundProperties.entrySet()) {
-            viewer.missingProperty(new Path.ChainedPath(this.path, entry.getKey()), entry.getValue());
+            viewer.missingProperty(this.path.add(Path.PathItem.of(entry.getKey())), entry.getValue());
         }
         for (final var entry : propertiesDiff.entrySet()) {
             if (entry.getValue().similarityRate() >= 99.9) {
-                viewer.matchingProperty(entry.getValue());
+                viewer.matchingProperty(path().add(Path.PathItem.of(entry.getKey())), entry.getValue());
             } else {
-                viewer.nonMatchingProperty(entry.getValue());
+                viewer.nonMatchingProperty(path().add(Path.PathItem.of((entry.getKey()))), entry.getValue());
             }
         }
     }

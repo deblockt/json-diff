@@ -19,7 +19,7 @@ public class LenientJsonObjectPartialMatcher implements PartialJsonMatcher<Objec
                 if (receivedValue == null) {
                     jsonDiff.addNotFoundProperty(expectedPropertyName, expectedValue);
                 } else {
-                    final var diff = jsonMatcher.diff(new Path.ChainedPath(path, expectedPropertyName), expectedValue, receivedValue);
+                    final var diff = jsonMatcher.diff(path.add(Path.PathItem.of(expectedPropertyName)), expectedValue, receivedValue);
                     jsonDiff.addPropertyDiff(expectedPropertyName, diff);
                 }
             });

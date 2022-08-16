@@ -19,7 +19,7 @@ public class JsonDiffAsserter implements JsonDiffViewer {
     private final List<PrimaryMatchingAsserter> primaryMatchingAsserters = new ArrayList<>();
 
     @Override
-    public void matchingProperty(JsonDiff diff) {
+    public void matchingProperty(Path path, JsonDiff diff) {
         for (final var asserter : matchingPropertyAsserters) {
             if (asserter.done(diff.path())) {
                 return;
@@ -29,7 +29,7 @@ public class JsonDiffAsserter implements JsonDiffViewer {
     }
 
     @Override
-    public void nonMatchingProperty(JsonDiff diff) {
+    public void nonMatchingProperty(Path path, JsonDiff diff) {
         for (final var asserter : nonMatchingPropertyAsserters) {
             if (asserter.done(diff.path())) {
                 return;

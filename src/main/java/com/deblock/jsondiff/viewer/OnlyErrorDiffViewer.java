@@ -12,7 +12,7 @@ public class OnlyErrorDiffViewer implements JsonDiffViewer {
     private final StringBuilder stringBuilder = new StringBuilder();
 
     @Override
-    public void matchingProperty(JsonDiff value) { }
+    public void matchingProperty(Path path, JsonDiff value) { }
 
     @Override
     public void primaryMatching(Path path, JsonNode value) {
@@ -20,7 +20,7 @@ public class OnlyErrorDiffViewer implements JsonDiffViewer {
     }
 
     @Override
-    public void nonMatchingProperty(JsonDiff diff) {
+    public void nonMatchingProperty(Path path, JsonDiff diff) {
         diff.display(this);
     }
 
