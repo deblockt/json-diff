@@ -43,18 +43,18 @@ public class JsonArrayDiff implements JsonDiff {
     public void display(JsonDiffViewer viewer) {
         for (final var valuesWithMatch : valuesWithMatch.entrySet()) {
             if (valuesWithMatch.getValue().similarityRate() >= 99.9) {
-                viewer.matchingProperty(valuesWithMatch.getValue());
+                viewer.matchingProperty(path().add(Path.PathItem.of(valuesWithMatch.getKey())), valuesWithMatch.getValue());
             } else {
-                viewer.nonMatchingProperty(valuesWithMatch.getValue());
+                viewer.nonMatchingProperty(path().add(Path.PathItem.of(valuesWithMatch.getKey())), valuesWithMatch.getValue());
             }
         }
 
         for (final var valuesWithoutMatch : valuesWithoutMatch.entrySet()) {
-            viewer.missingProperty(new Path.ChainedPath(path(), String.valueOf(valuesWithoutMatch.getKey())), valuesWithoutMatch.getValue());
+            viewer.missingProperty(path().add(Path.PathItem.of(valuesWithoutMatch.getKey())), valuesWithoutMatch.getValue());
         }
 
         for (final var extraItem: extraValues.entrySet()) {
-            viewer.extraProperty(new Path.ChainedPath(path(), String.valueOf(extraItem.getKey())), extraItem.getValue());
+            viewer.extraProperty(path().add(Path.PathItem.of(extraItem.getKey())), extraItem.getValue());
         }
     }
 

@@ -6,9 +6,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public interface JsonDiffViewer {
 
-    void matchingProperty(JsonDiff diff);
+    void matchingProperty(Path path, JsonDiff diff);
 
-    void nonMatchingProperty(JsonDiff diff);
+    void nonMatchingProperty(Path path, JsonDiff diff);
 
     void missingProperty(Path path, JsonNode value);
 

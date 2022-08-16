@@ -18,7 +18,7 @@ public class LenientJsonArrayPartialMatcher implements PartialJsonMatcher<ArrayN
         for (final var expectedValue: expectedValues) {
             final var map = new HashMap<Integer, JsonDiff>();
             for (var x = 0; x < receivedValues.size(); ++x) {
-                map.put(x, jsonMatcher.diff(new Path.ChainedPath(path, String.valueOf(i)), expectedValue, receivedValues.get(x)));
+                map.put(x, jsonMatcher.diff(path.add(Path.PathItem.of(i)), expectedValue, receivedValues.get(x)));
             }
             diffMap.put(i, map);
             ++i;

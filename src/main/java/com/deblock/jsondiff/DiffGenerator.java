@@ -14,13 +14,13 @@ public class DiffGenerator {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     public static JsonDiff diff(String expected, String actual, JsonMatcher jsonMatcher) {
-        return jsonMatcher.diff(Path.Root.INSTANCE, read(expected), read(actual));
+        return jsonMatcher.diff(Path.ROOT, read(expected), read(actual));
     }
 
     public static List<JsonDiff> diff(String expected, List<String> actualValues, JsonMatcher jsonMatcher) {
         final var expectedObject = read(expected);
         return actualValues.stream()
-            .map(actual -> jsonMatcher.diff(Path.Root.INSTANCE, expectedObject, read(actual)))
+            .map(actual -> jsonMatcher.diff(Path.ROOT, expectedObject, read(actual)))
             .collect(Collectors.toList());
     }
 

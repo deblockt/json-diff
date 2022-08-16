@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 
 public class LenientJsonArrayPartialMatcherTest {
-    private final static Path path = new Path.ChainedPath(Path.Root.INSTANCE, "a");
+    private final static Path path = Path.ROOT.add(Path.PathItem.of("a"));
 
     @Test
     public void shouldReturnFullMatchWhenAllItemsAreFound() {
@@ -27,8 +27,8 @@ public class LenientJsonArrayPartialMatcherTest {
         assertEquals(100, result.similarityRate());
         assertEquals(path, result.path());
         new JsonDiffAsserter()
-                .assertMatchingProperty(new Path.ChainedPath(path, "0"))
-                .assertMatchingProperty(new Path.ChainedPath(path, "1"))
+                .assertMatchingProperty(path.add(Path.PathItem.of(0)))
+                .assertMatchingProperty(path.add(Path.PathItem.of(1)))
                 .validate(result);
     }
 
@@ -44,8 +44,8 @@ public class LenientJsonArrayPartialMatcherTest {
         assertEquals(100, result.similarityRate());
         assertEquals(path, result.path());
         new JsonDiffAsserter()
-                .assertMatchingProperty(new Path.ChainedPath(path, "0"))
-                .assertMatchingProperty(new Path.ChainedPath(path, "1"))
+                .assertMatchingProperty(path.add(Path.PathItem.of(0)))
+                .assertMatchingProperty(path.add(Path.PathItem.of(1)))
                 .validate(result);
     }
 
@@ -61,8 +61,8 @@ public class LenientJsonArrayPartialMatcherTest {
         assertEquals(0, result.similarityRate());
         assertEquals(path, result.path());
         new JsonDiffAsserter()
-                .assertNonMatchingProperty(new Path.ChainedPath(path, "0"))
-                .assertNonMatchingProperty(new Path.ChainedPath(path, "1"))
+                .assertNonMatchingProperty(path.add(Path.PathItem.of(0)))
+                .assertNonMatchingProperty(path.add(Path.PathItem.of(1)))
                 .validate(result);
     }
 
@@ -78,8 +78,8 @@ public class LenientJsonArrayPartialMatcherTest {
         assertEquals(50, result.similarityRate());
         assertEquals(path, result.path());
         new JsonDiffAsserter()
-                .assertMissingProperty(new Path.ChainedPath(path, "0"))
-                .assertMatchingProperty(new Path.ChainedPath(path, "1"))
+                .assertMissingProperty(path.add(Path.PathItem.of(0)))
+                .assertMatchingProperty(path.add(Path.PathItem.of(1)))
                 .validate(result);
     }
 
@@ -95,10 +95,10 @@ public class LenientJsonArrayPartialMatcherTest {
         assertEquals(50, result.similarityRate());
         assertEquals(path, result.path());
         new JsonDiffAsserter()
-                .assertMatchingProperty(new Path.ChainedPath(path, "0"))
-                .assertMatchingProperty(new Path.ChainedPath(path, "1")) // the path of matching prop is the path on the expected object
-                .assertExtraProperty(new Path.ChainedPath(path, "1")) // the path of extra property is the path on the received object not on the expected
-                .assertExtraProperty(new Path.ChainedPath(path, "3"))
+                .assertMatchingProperty(path.add(Path.PathItem.of(0)))
+                .assertMatchingProperty(path.add(Path.PathItem.of(1))) // the path of matching prop is the path on the expected object
+                .assertExtraProperty(path.add(Path.PathItem.of(1))) // the path of extra property is the path on the received object not on the expected
+                .assertExtraProperty(path.add(Path.PathItem.of(3)))
                 .validate(result);
     }
 
