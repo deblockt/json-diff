@@ -50,3 +50,36 @@ The property "$.foo" didn't match. Expected "bar", Received: "foo"
 67.0
 ```
 
+You can also generate a patch file using this viewer: 
+```java
+final var patch = PatchDiffViewer.from(jsondiff);
+
+// use the viewer to collect diff data
+final var patchFile= PatchDiffViewer.from(jsondiff);
+
+// print the diff result
+System.out.println(patchFile);
+```
+
+Result:
+``` diff
+--- actual
++++ expected
+@@ @@
+ {
++  "additionalProperty": "a",
+   "bar": "bar",
+-  "numberUnmatched": 10.02,
++  "numberUnmatched": 10.01,
+-  "arrayUnmatched": {"b":"b"},
++  "arrayUnmatched": [{"b":"a"}],
+-  "foo": "foo",
++  "foo": "bar",
+   "numberMatch": 10.0,
+   "arrayMatch": [
+     {
+       "b": "a"
+     }
+   ]
+ }
+```

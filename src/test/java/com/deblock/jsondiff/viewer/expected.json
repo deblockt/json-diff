@@ -1,0 +1,25 @@
+{
+  "arrayWithExtraItem": [1, 2, 3],
+  "arrayWithNoneMatching": [1, 2, 3],
+  "arrayWithMissingProperty": [2, 3],
+  "objectWithMissingPropertyAndNonMatching": {
+    "b": 5
+  },
+  "objectWithExtraProperty": {
+    "a": "1",
+    "c": "5"
+  },
+  "arrayWithObjectWithIssue": [
+    {
+      "a": {
+        "b": [
+          {
+            "c": "1",
+            "d": 2
+          }
+        ]
+      },
+      "c": "3"
+    }
+  ]
+}
