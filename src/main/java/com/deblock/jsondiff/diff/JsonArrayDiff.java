@@ -42,7 +42,7 @@ public class JsonArrayDiff implements JsonDiff {
     @Override
     public void display(JsonDiffViewer viewer) {
         for (final var valuesWithMatch : valuesWithMatch.entrySet()) {
-            if (valuesWithMatch.getValue().similarityRate() >= 99.9) {
+            if (valuesWithMatch.getValue().similarityRate() == 100) {
                 viewer.matchingProperty(path().add(Path.PathItem.of(valuesWithMatch.getKey())), valuesWithMatch.getValue());
             } else {
                 viewer.nonMatchingProperty(path().add(Path.PathItem.of(valuesWithMatch.getKey())), valuesWithMatch.getValue());

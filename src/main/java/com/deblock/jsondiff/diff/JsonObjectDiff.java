@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JsonObjectDiff implements JsonDiff {
-    private final static int STRUCTURE_MAX_RATIO = 50;
-    private final static int VALUE_MAX_RATIO = 50;
+    private static final int STRUCTURE_MAX_RATIO = 50;
+    private static final int VALUE_MAX_RATIO = 50;
 
     private final Map<String, JsonDiff> propertiesDiff = new HashMap<>();
     private final Map<String, JsonNode> notFoundProperties = new HashMap<>();
@@ -57,7 +57,7 @@ public class JsonObjectDiff implements JsonDiff {
             viewer.missingProperty(this.path.add(Path.PathItem.of(entry.getKey())), entry.getValue());
         }
         for (final var entry : propertiesDiff.entrySet()) {
-            if (entry.getValue().similarityRate() >= 99.9) {
+            if (entry.getValue().similarityRate() >= 100) {
                 viewer.matchingProperty(path().add(Path.PathItem.of(entry.getKey())), entry.getValue());
             } else {
                 viewer.nonMatchingProperty(path().add(Path.PathItem.of((entry.getKey()))), entry.getValue());
