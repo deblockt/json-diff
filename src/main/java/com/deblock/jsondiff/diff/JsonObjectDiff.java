@@ -13,6 +13,7 @@ public class JsonObjectDiff implements JsonDiff {
 
     private final Map<String, JsonDiff> propertiesDiff = new HashMap<>();
     private final Map<String, JsonNode> notFoundProperties = new HashMap<>();
+    private final Map<String, JsonNode> unexpectedProperties = new HashMap<>();
 
     private final Path path;
 
@@ -20,6 +21,9 @@ public class JsonObjectDiff implements JsonDiff {
         this.path = path;
     }
 
+    public void addUnexpectedProperty(String propertyName, JsonNode value) {
+        unexpectedProperties.put(propertyName, value);
+    }
     public void addNotFoundProperty(String propertyName, JsonNode value) {
         notFoundProperties.put(propertyName, value);
     }
@@ -55,6 +59,9 @@ public class JsonObjectDiff implements JsonDiff {
     public void display(JsonDiffViewer viewer) {
         for (final var entry : notFoundProperties.entrySet()) {
             viewer.missingProperty(this.path.add(Path.PathItem.of(entry.getKey())), entry.getValue());
+        }
+        for (final var entry : unexpectedProperties.entrySet()) {
+            viewer.extraProperty(this.path.add(Path.PathItem.of(entry.getKey())), entry.getValue());
         }
         for (final var entry : propertiesDiff.entrySet()) {
             if (entry.getValue().similarityRate() >= 100) {

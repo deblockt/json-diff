@@ -2,18 +2,17 @@ package com.deblock.jsondiff.matcher;
 
 import com.deblock.jsondiff.diff.JsonDiff;
 import com.deblock.jsondiff.viewer.JsonDiffViewer;
-import com.deblock.jsondiff.viewer.OnlyErrorDiffViewer;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.Map;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 
-public class LenientJsonObjectPartialMatcherTest {
+public class StrictJsonObjectPartialMatcherTest {
     private final Path path = Path.ROOT.add(Path.PathItem.of("foo"));
 
     @Test
@@ -21,7 +20,7 @@ public class LenientJsonObjectPartialMatcherTest {
         final var object1 = new ObjectNode(null);
         final var object2 = new ObjectNode(null);
 
-        final var result = new LenientJsonObjectPartialMatcher().jsonDiff(path, object1, object2, null);
+        final var result = new StrictJsonObjectPartialMatcher().jsonDiff(path, object1, object2, null);
 
         assertEquals(100, result.similarityRate());
         assertEquals(path, result.path());
@@ -35,7 +34,7 @@ public class LenientJsonObjectPartialMatcherTest {
         ));
         final var object2 = new ObjectNode(null);
 
-        final var result = new LenientJsonObjectPartialMatcher().jsonDiff(path, object1, object2, null);
+        final var result = new StrictJsonObjectPartialMatcher().jsonDiff(path, object1, object2, null);
 
         assertEquals(0, result.similarityRate());
         assertEquals(path, result.path());
@@ -57,7 +56,7 @@ public class LenientJsonObjectPartialMatcherTest {
         ));
         final var parentMatcher = Mockito.mock(JsonMatcher.class);
         Mockito.when(parentMatcher.diff(any(), any(), any())).thenAnswer((args) -> nonMatchJsonDiff(args.getArgument(0)));
-        final var result = new LenientJsonObjectPartialMatcher().jsonDiff(path, object1, object2, parentMatcher);
+        final var result = new StrictJsonObjectPartialMatcher().jsonDiff(path, object1, object2, parentMatcher);
 
         assertEquals(path, result.path());
         new JsonDiffAsserter()
@@ -78,7 +77,7 @@ public class LenientJsonObjectPartialMatcherTest {
         ));
         final var parentMatcher = Mockito.mock(JsonMatcher.class);
         Mockito.when(parentMatcher.diff(any(), any(), any())).thenAnswer((args) -> fullMatchJsonDiff(args.getArgument(0)));
-        final var result = new LenientJsonObjectPartialMatcher().jsonDiff(path, object1, object2, parentMatcher);
+        final var result = new StrictJsonObjectPartialMatcher().jsonDiff(path, object1, object2, parentMatcher);
 
         assertEquals(path, result.path());
         new JsonDiffAsserter()
@@ -99,7 +98,7 @@ public class LenientJsonObjectPartialMatcherTest {
         ));
         final var parentMatcher = Mockito.mock(JsonMatcher.class);
         Mockito.when(parentMatcher.diff(any(), any(), any())).thenAnswer((args) -> fullMatchJsonDiff(args.getArgument(0)));
-        final var result = new LenientJsonObjectPartialMatcher().jsonDiff(path, object1, object2, parentMatcher);
+        final var result = new StrictJsonObjectPartialMatcher().jsonDiff(path, object1, object2, parentMatcher);
 
         assertEquals(path, result.path());
         new JsonDiffAsserter()
@@ -111,24 +110,20 @@ public class LenientJsonObjectPartialMatcherTest {
 
     @Test
     public void shouldReturnSimilarityIfExtraProperties() {
-        final var object1 = new ObjectNode(null, Map.of(
-            "a", TextNode.valueOf("a")
-        ));
-        final var object2 = new ObjectNode(null, Map.of(
-            "a", TextNode.valueOf("a"),
-            "b", TextNode.valueOf("b"),
-            "c", TextNode.valueOf("b")
-        ));
+        final var object1 = new ObjectNode(null, Map.of("a", TextNode.valueOf("a")));
+        final var object2 = new ObjectNode(null,
+            Map.of("a", TextNode.valueOf("a"), "b", TextNode.valueOf("b"), "c", TextNode.valueOf("b")));
         final var parentMatcher = Mockito.mock(JsonMatcher.class);
         Mockito.when(parentMatcher.diff(any(), any(), any())).thenAnswer((args) -> fullMatchJsonDiff(args.getArgument(0)));
-        final var result = new LenientJsonObjectPartialMatcher().jsonDiff(path, object1, object2, parentMatcher);
+        final var result = new StrictJsonObjectPartialMatcher().jsonDiff(path, object1, object2, parentMatcher);
 
         assertEquals(path, result.path());
         new JsonDiffAsserter()
             .assertMatchingProperty(path.add(Path.PathItem.of("a")))
+            .assertExtraProperty(path.add(Path.PathItem.of("b")))
+            .assertExtraProperty(path.add(Path.PathItem.of("c")))
             .validate(result);
     }
-
 
     private JsonDiff nonMatchJsonDiff(Path path) {
         return new JsonDiff() {
