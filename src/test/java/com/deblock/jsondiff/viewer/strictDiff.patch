@@ -1,0 +1,49 @@
+--- actual
++++ expected
+@@ @@
+ {
+   "arrayWithObjectWithIssue": [
+     {
+       "a": {
+         "b": [
+           {
+-            "c": 1
++            "c": "1",
++            "d": 2
+           }
+         ]
+       },
+-      "c": {"d":3}
++      "c": "3"
+     }
+   ],
+   "arrayWithExtraItem": [
+     1,
+     2,
+-    3,
++    3
+-    6,
+-    7
+   ],
+   "arrayWithNoneMatching": [
+     1,
+-    4,
++    2,
+     3
+   ],
+   "objectWithExtraProperty": {
+-    "a": "1"
++    "a": "1",
++    "c": "5"
+   },
+-  "extraObject": {"a":"1"},
+   "arrayWithMissingProperty": [
++    2,
+     3
+   ],
+   "objectWithMissingPropertyAndNonMatching": {
+-    "a": 1,
+-    "b": 2
++    "b": 5
+   }
+ }
