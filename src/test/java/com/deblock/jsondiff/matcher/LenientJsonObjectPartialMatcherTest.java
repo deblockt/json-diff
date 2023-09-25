@@ -36,9 +36,9 @@ public class LenientJsonObjectPartialMatcherTest {
 
         final var result = new LenientJsonObjectPartialMatcher().jsonDiff(path, object1, object2, null);
 
-        assertEquals(0, result.similarityRate());
         assertEquals(path, result.path());
         new JsonDiffAsserter()
+                .assertSimilarityRate(0, 0)
                 .assertMissingProperty(path.add(Path.PathItem.of("a")))
                 .assertMissingProperty(path.add(Path.PathItem.of("b")))
                 .validate(result);
@@ -60,8 +60,31 @@ public class LenientJsonObjectPartialMatcherTest {
 
         assertEquals(path, result.path());
         new JsonDiffAsserter()
+                .assertSimilarityRate(60, 0)
                 .assertNonMatchingProperty(path.add(Path.PathItem.of("a")))
                 .assertNonMatchingProperty(path.add(Path.PathItem.of("b")))
+                .validate(result);
+    }
+
+    @Test
+    public void shouldMixMatchingAndNotFoundPropertiesOnSameResult() {
+        final var object1 = new ObjectNode(null, Map.of(
+                "a", TextNode.valueOf("a"),
+                "b", TextNode.valueOf("b")
+        ));
+        final var object2 = new ObjectNode(null, Map.of(
+                "a", TextNode.valueOf("a"),
+                "c", TextNode.valueOf("b")
+        ));
+        final var parentMatcher = Mockito.mock(JsonMatcher.class);
+        Mockito.when(parentMatcher.diff(any(), any(), any())).thenAnswer((args) -> fullMatchJsonDiff(args.getArgument(0)));
+        final var result = new LenientJsonObjectPartialMatcher().jsonDiff(path, object1, object2, parentMatcher);
+
+        assertEquals(path, result.path());
+        new JsonDiffAsserter()
+                .assertSimilarityRate(30, 20)
+                .assertMatchingProperty(path.add(Path.PathItem.of("a")))
+                .assertMissingProperty(path.add(Path.PathItem.of("b")))
                 .validate(result);
     }
 
@@ -81,6 +104,7 @@ public class LenientJsonObjectPartialMatcherTest {
 
         assertEquals(path, result.path());
         new JsonDiffAsserter()
+                .assertSimilarityRate(60, 40)
                 .assertMatchingProperty(path.add(Path.PathItem.of("a")))
                 .assertMatchingProperty(path.add(Path.PathItem.of("b")))
                 .validate(result);
@@ -102,6 +126,7 @@ public class LenientJsonObjectPartialMatcherTest {
 
         assertEquals(path, result.path());
         new JsonDiffAsserter()
+                .assertSimilarityRate(20, 40.0 / 3.0)
                 .assertMatchingProperty(path.add(Path.PathItem.of("a")))
                 .assertMissingProperty(path.add(Path.PathItem.of("b")))
                 .assertMissingProperty(path.add(Path.PathItem.of("c")))
