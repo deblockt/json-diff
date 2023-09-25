@@ -17,6 +17,7 @@ public class JsonDiffAsserter implements JsonDiffViewer {
     private final List<MatchingPropertyAsserter> matchingPropertyAsserters = new ArrayList<>();
     private final List<PrimaryNonMatchingAsserter> primaryNonMatchingAsserters = new ArrayList<>();
     private final List<PrimaryMatchingAsserter> primaryMatchingAsserters = new ArrayList<>();
+    private Double expectedSimilarityRate = null;
 
     @Override
     public void matchingProperty(Path path, JsonDiff diff) {
@@ -79,6 +80,14 @@ public class JsonDiffAsserter implements JsonDiffViewer {
     }
 
     public void validate(JsonDiff jsonDiff) {
+        if (this.expectedSimilarityRate != null && this.expectedSimilarityRate != jsonDiff.similarityRate()) {
+            throw new AssertionError(
+                    String.format(
+                            "The similarity rate should be equals to \"%s\" but actual value is \"%s\"",
+                            this.expectedSimilarityRate, jsonDiff.similarityRate()
+                    )
+            );
+        }
         jsonDiff.display(this);
 
         final var allErrors = Stream.of(missingPropertyAsserters, nonMatchingPropertyAsserters, matchingPropertyAsserters, primaryNonMatchingAsserters, extraPropertyAsserters)
@@ -119,6 +128,11 @@ public class JsonDiffAsserter implements JsonDiffViewer {
 
     public JsonDiffAsserter assertExtraProperty(Path path) {
         this.extraPropertyAsserters.add(new ExtraPropertyAsserter(path));
+        return this;
+    }
+
+    public JsonDiffAsserter assertSimilarityRate(double structural, double value) {
+        this.expectedSimilarityRate = structural + value;
         return this;
     }
 
