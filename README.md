@@ -10,7 +10,7 @@ maven
 <dependency>
     <groupId>io.github.deblockt</groupId>
     <artifactId>json-diff</artifactId>
-    <version>0.0.6</version>
+    <version>0.0.8</version>
 </dependency>
 ```
 
