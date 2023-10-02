@@ -12,11 +12,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 
-public class LenientJsonArrayPartialMatcherTest {
+class LenientJsonArrayPartialMatcherTest {
     private final static Path path = Path.ROOT.add(Path.PathItem.of("a"));
 
     @Test
-    public void shouldReturnFullMatchWhenAllItemsAreFound() {
+    void shouldReturnFullMatchWhenAllItemsAreFound() {
         final var array1 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b")));
         final var array2 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b")));
         final var jsonMatcher = Mockito.mock(JsonMatcher.class);
@@ -33,7 +33,7 @@ public class LenientJsonArrayPartialMatcherTest {
     }
 
     @Test
-    public void shouldReturnFullMatchWhenAllItemsAreFoundWithBadOrder() {
+    void shouldReturnFullMatchWhenAllItemsAreFoundWithBadOrder() {
         final var array1 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b")));
         final var array2 = new ArrayNode(null, List.of(TextNode.valueOf("b"), TextNode.valueOf("a")));
         final var jsonMatcher = Mockito.mock(JsonMatcher.class);
@@ -50,7 +50,22 @@ public class LenientJsonArrayPartialMatcherTest {
     }
 
     @Test
-    public void shouldReturnNoMatchWhenSameNumberItemWithNoMatch() {
+    void shouldReturnFullMatchForEmptyArray() {
+        final var array1 = new ArrayNode(null, List.of());
+        final var array2 = new ArrayNode(null, List.of());
+        final var jsonMatcher = Mockito.mock(JsonMatcher.class);
+        Mockito.when(jsonMatcher.diff(any(), any(), any())).thenAnswer(this::matchByEquality);
+
+        final var result = new LenientJsonArrayPartialMatcher().jsonDiff(path, array1, array2, jsonMatcher);
+
+        assertEquals(100, result.similarityRate());
+        assertEquals(path, result.path());
+        new JsonDiffAsserter()
+                .validate(result);
+    }
+
+    @Test
+    void shouldReturnNoMatchWhenSameNumberItemWithNoMatch() {
         final var array1 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b")));
         final var array2 = new ArrayNode(null, List.of(TextNode.valueOf("c"), TextNode.valueOf("d")));
         final var jsonMatcher = Mockito.mock(JsonMatcher.class);
@@ -67,7 +82,7 @@ public class LenientJsonArrayPartialMatcherTest {
     }
 
     @Test
-    public void shouldReturnPartialMatchWhenMissingItem() {
+    void shouldReturnPartialMatchWhenMissingItem() {
         final var array1 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b")));
         final var array2 = new ArrayNode(null, List.of(TextNode.valueOf("b")));
         final var jsonMatcher = Mockito.mock(JsonMatcher.class);
@@ -84,7 +99,7 @@ public class LenientJsonArrayPartialMatcherTest {
     }
 
     @Test
-    public void shouldReturnPartialMatchWhenExtraItems() {
+    void shouldReturnPartialMatchWhenExtraItems() {
         final var array1 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("c")));
         final var array2 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b"), TextNode.valueOf("c"), TextNode.valueOf("d")));
         final var jsonMatcher = Mockito.mock(JsonMatcher.class);
