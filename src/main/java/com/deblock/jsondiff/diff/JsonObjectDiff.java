@@ -13,6 +13,7 @@ public class JsonObjectDiff implements JsonDiff {
 
     private final Map<String, JsonDiff> propertiesDiff = new HashMap<>();
     private final Map<String, JsonNode> notFoundProperties = new HashMap<>();
+    private final Map<String, JsonNode> extraProperties = new HashMap<>();
 
     private final Path path;
 
@@ -24,14 +25,21 @@ public class JsonObjectDiff implements JsonDiff {
         notFoundProperties.put(propertyName, value);
     }
 
+    public void addExtraProperty(String propertyName, JsonNode value) {
+        extraProperties.put(propertyName, value);
+    }
+
     public void addPropertyDiff(String propertyName, JsonDiff diff) {
         propertiesDiff.put(propertyName, diff);
     }
 
+
     @Override
     public double similarityRate() {
         final var notFoundPropertiesCount = notFoundProperties.keySet().size();
-        final var totalPropertiesCount = propertiesDiff.keySet().size() + notFoundPropertiesCount;
+        final var unexpectedPropertiesCount = extraProperties.keySet().size();
+
+        final var totalPropertiesCount = propertiesDiff.keySet().size() + notFoundPropertiesCount + unexpectedPropertiesCount;
 
         if (totalPropertiesCount == 0) {
             return 100;
@@ -41,7 +49,7 @@ public class JsonObjectDiff implements JsonDiff {
                 .mapToDouble(JsonDiff::similarityRate)
                 .sum();
 
-        final var structureRatio = (totalPropertiesCount - notFoundPropertiesCount) * STRUCTURE_MAX_RATIO / totalPropertiesCount;
+        final var structureRatio = (totalPropertiesCount - notFoundPropertiesCount - unexpectedPropertiesCount) * STRUCTURE_MAX_RATIO / totalPropertiesCount;
         final double equalityRatio;
         if (propertiesDiff.isEmpty()) {
             equalityRatio = 0;
@@ -60,8 +68,11 @@ public class JsonObjectDiff implements JsonDiff {
             if (entry.getValue().similarityRate() >= 100) {
                 viewer.matchingProperty(path().add(Path.PathItem.of(entry.getKey())), entry.getValue());
             } else {
-                viewer.nonMatchingProperty(path().add(Path.PathItem.of((entry.getKey()))), entry.getValue());
+                viewer.nonMatchingProperty(path().add(Path.PathItem.of(entry.getKey())), entry.getValue());
             }
+        }
+        for (final var entry: extraProperties.entrySet()) {
+            viewer.extraProperty(path().add(Path.PathItem.of(entry.getKey())), entry.getValue());
         }
     }
 
@@ -69,4 +80,5 @@ public class JsonObjectDiff implements JsonDiff {
     public Path path() {
         return this.path;
     }
+
 }

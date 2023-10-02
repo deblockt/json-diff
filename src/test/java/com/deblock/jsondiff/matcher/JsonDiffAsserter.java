@@ -80,7 +80,7 @@ public class JsonDiffAsserter implements JsonDiffViewer {
     }
 
     public void validate(JsonDiff jsonDiff) {
-        if (this.expectedSimilarityRate != null && this.expectedSimilarityRate != jsonDiff.similarityRate()) {
+        if (this.expectedSimilarityRate != null && Math.abs(this.expectedSimilarityRate - jsonDiff.similarityRate()) > 0.1) {
             throw new AssertionError(
                     String.format(
                             "The similarity rate should be equals to \"%s\" but actual value is \"%s\"",
@@ -132,7 +132,11 @@ public class JsonDiffAsserter implements JsonDiffViewer {
     }
 
     public JsonDiffAsserter assertSimilarityRate(double structural, double value) {
-        this.expectedSimilarityRate = structural + value;
+        return assertSimilarityRate(structural + value);
+    }
+
+    public JsonDiffAsserter assertSimilarityRate(double value) {
+        this.expectedSimilarityRate = value;
         return this;
     }
 
