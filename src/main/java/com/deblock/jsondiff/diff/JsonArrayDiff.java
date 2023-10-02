@@ -31,7 +31,10 @@ public class JsonArrayDiff implements JsonDiff {
 
     @Override
     public double similarityRate() {
-        final var totalArraySize = valuesWithoutMatch.size() + valuesWithMatch.size() + this.extraValues.size();
+        final var totalArraySize = valuesWithoutMatch.size() + valuesWithMatch.size() + extraValues.size();
+        if (totalArraySize == 0) {
+            return 100.0;
+        }
         final var totalSimilarityRate = valuesWithMatch.values().stream()
                 .mapToDouble(JsonDiff::similarityRate)
                 .sum();

@@ -12,11 +12,11 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 
-public class LenientJsonObjectPartialMatcherTest {
+class LenientJsonObjectPartialMatcherTest {
     private final Path path = Path.ROOT.add(Path.PathItem.of("foo"));
 
     @Test
-    public void shouldReturnFullMatchForTwoEmptyObjects() {
+    void shouldReturnFullMatchForTwoEmptyObjects() {
         final var object1 = new ObjectNode(null);
         final var object2 = new ObjectNode(null);
 
@@ -27,7 +27,7 @@ public class LenientJsonObjectPartialMatcherTest {
     }
 
     @Test
-    public void shouldReturnNonMachIfAllPropertiesAreNotFound() {
+    void shouldReturnNonMachIfAllPropertiesAreNotFound() {
         final var object1 = new ObjectNode(null, Map.of(
             "a", TextNode.valueOf("a"),
             "b", TextNode.valueOf("b")
@@ -45,7 +45,7 @@ public class LenientJsonObjectPartialMatcherTest {
     }
 
     @Test
-    public void shouldReturnNonMatchingPropertyIfAllPropertiesAreFoundWithoutMatch() {
+    void shouldReturnNonMatchingPropertyIfAllPropertiesAreFoundWithoutMatch() {
         final var object1 = new ObjectNode(null, Map.of(
             "a", TextNode.valueOf("a"),
             "b", TextNode.valueOf("b")
@@ -67,7 +67,7 @@ public class LenientJsonObjectPartialMatcherTest {
     }
 
     @Test
-    public void shouldMixMatchingAndNotFoundPropertiesOnSameResult() {
+    void shouldMixMatchingAndNotFoundPropertiesOnSameResult() {
         final var object1 = new ObjectNode(null, Map.of(
                 "a", TextNode.valueOf("a"),
                 "b", TextNode.valueOf("b")
@@ -89,7 +89,7 @@ public class LenientJsonObjectPartialMatcherTest {
     }
 
     @Test
-    public void shouldReturnFullMatchingPropertyAllPropertiesAreFoundAndMatch() {
+    void shouldReturnFullMatchingPropertyAllPropertiesAreFoundAndMatch() {
         final var object1 = new ObjectNode(null, Map.of(
                 "a", TextNode.valueOf("a"),
                 "b", TextNode.valueOf("b")
@@ -111,7 +111,7 @@ public class LenientJsonObjectPartialMatcherTest {
     }
 
     @Test
-    public void shouldReturnSimilarityIfOnlyOneProperty() {
+    void shouldReturnSimilarityIfOnlyOneProperty() {
         final var object1 = new ObjectNode(null, Map.of(
                 "a", TextNode.valueOf("a"),
                 "b", TextNode.valueOf("b"),
