@@ -12,7 +12,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 
-class LenientJsonArrayPartialMatcherTest {
+class StrictJsonArrayPartialMatcherTest {
     private final static Path path = Path.ROOT.add(Path.PathItem.of("a"));
 
     @Test
@@ -22,24 +22,7 @@ class LenientJsonArrayPartialMatcherTest {
         final var jsonMatcher = Mockito.mock(JsonMatcher.class);
         Mockito.when(jsonMatcher.diff(any(), any(), any())).thenAnswer(this::matchByEquality);
 
-        final var result = new LenientJsonArrayPartialMatcher().jsonDiff(path, array1, array2, jsonMatcher);
-
-        assertEquals(path, result.path());
-        new JsonDiffAsserter()
-                .assertSimilarityRate(100)
-                .assertMatchingProperty(path.add(Path.PathItem.of(0)))
-                .assertMatchingProperty(path.add(Path.PathItem.of(1)))
-                .validate(result);
-    }
-
-    @Test
-    void shouldReturnFullMatchWhenAllItemsAreFoundWithBadOrder() {
-        final var array1 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b")));
-        final var array2 = new ArrayNode(null, List.of(TextNode.valueOf("b"), TextNode.valueOf("a")));
-        final var jsonMatcher = Mockito.mock(JsonMatcher.class);
-        Mockito.when(jsonMatcher.diff(any(), any(), any())).thenAnswer(this::matchByEquality);
-
-        final var result = new LenientJsonArrayPartialMatcher().jsonDiff(path, array1, array2, jsonMatcher);
+        final var result = new StrictJsonArrayPartialMatcher().jsonDiff(path, array1, array2, jsonMatcher);
 
         assertEquals(path, result.path());
         new JsonDiffAsserter()
@@ -56,7 +39,7 @@ class LenientJsonArrayPartialMatcherTest {
         final var jsonMatcher = Mockito.mock(JsonMatcher.class);
         Mockito.when(jsonMatcher.diff(any(), any(), any())).thenAnswer(this::matchByEquality);
 
-        final var result = new LenientJsonArrayPartialMatcher().jsonDiff(path, array1, array2, jsonMatcher);
+        final var result = new StrictJsonArrayPartialMatcher().jsonDiff(path, array1, array2, jsonMatcher);
 
         assertEquals(path, result.path());
         new JsonDiffAsserter()
@@ -65,13 +48,13 @@ class LenientJsonArrayPartialMatcherTest {
     }
 
     @Test
-    void shouldReturnNoMatchWhenSameNumberItemWithNoMatch() {
+    void shouldReturnNoMatchWhenItemsAreNonOrdered() {
         final var array1 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b")));
-        final var array2 = new ArrayNode(null, List.of(TextNode.valueOf("c"), TextNode.valueOf("d")));
+        final var array2 = new ArrayNode(null, List.of(TextNode.valueOf("b"), TextNode.valueOf("a")));
         final var jsonMatcher = Mockito.mock(JsonMatcher.class);
         Mockito.when(jsonMatcher.diff(any(), any(), any())).thenAnswer(this::matchByEquality);
 
-        final var result = new LenientJsonArrayPartialMatcher().jsonDiff(path, array1, array2, jsonMatcher);
+        final var result = new StrictJsonArrayPartialMatcher().jsonDiff(path, array1, array2, jsonMatcher);
 
         assertEquals(path, result.path());
         new JsonDiffAsserter()
@@ -82,38 +65,54 @@ class LenientJsonArrayPartialMatcherTest {
     }
 
     @Test
-    void shouldReturnPartialMatchWhenMissingItem() {
+    void shouldReturnNoMatchWhenSameNumberItemWithNoMatch() {
         final var array1 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b")));
-        final var array2 = new ArrayNode(null, List.of(TextNode.valueOf("b")));
+        final var array2 = new ArrayNode(null, List.of(TextNode.valueOf("c"), TextNode.valueOf("d")));
         final var jsonMatcher = Mockito.mock(JsonMatcher.class);
         Mockito.when(jsonMatcher.diff(any(), any(), any())).thenAnswer(this::matchByEquality);
 
-        final var result = new LenientJsonArrayPartialMatcher().jsonDiff(path, array1, array2, jsonMatcher);
+        final var result = new StrictJsonArrayPartialMatcher().jsonDiff(path, array1, array2, jsonMatcher);
+
+        assertEquals(0, result.similarityRate());
+        assertEquals(path, result.path());
+        new JsonDiffAsserter()
+                .assertNonMatchingProperty(path.add(Path.PathItem.of(0)))
+                .assertNonMatchingProperty(path.add(Path.PathItem.of(1)))
+                .validate(result);
+    }
+
+    @Test
+    void shouldReturnPartialMatchWhenMissingItem() {
+        final var array1 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b")));
+        final var array2 = new ArrayNode(null, List.of(TextNode.valueOf("a")));
+        final var jsonMatcher = Mockito.mock(JsonMatcher.class);
+        Mockito.when(jsonMatcher.diff(any(), any(), any())).thenAnswer(this::matchByEquality);
+
+        final var result = new StrictJsonArrayPartialMatcher().jsonDiff(path, array1, array2, jsonMatcher);
 
         assertEquals(path, result.path());
         new JsonDiffAsserter()
                 .assertSimilarityRate(50)
-                .assertMissingProperty(path.add(Path.PathItem.of(0)))
-                .assertMatchingProperty(path.add(Path.PathItem.of(1)))
+                .assertMissingProperty(path.add(Path.PathItem.of(1)))
+                .assertMatchingProperty(path.add(Path.PathItem.of(0)))
                 .validate(result);
     }
 
     @Test
     void shouldReturnPartialMatchWhenExtraItems() {
         final var array1 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("c")));
-        final var array2 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b"), TextNode.valueOf("c"), TextNode.valueOf("d")));
+        final var array2 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b"), TextNode.valueOf("c")));
         final var jsonMatcher = Mockito.mock(JsonMatcher.class);
         Mockito.when(jsonMatcher.diff(any(), any(), any())).thenAnswer(this::matchByEquality);
 
-        final var result = new LenientJsonArrayPartialMatcher().jsonDiff(path, array1, array2, jsonMatcher);
+        final var result = new StrictJsonArrayPartialMatcher().jsonDiff(path, array1, array2, jsonMatcher);
 
         assertEquals(path, result.path());
         new JsonDiffAsserter()
-                .assertSimilarityRate(50)
+                .assertSimilarityRate(33.33d)
                 .assertMatchingProperty(path.add(Path.PathItem.of(0)))
-                .assertMatchingProperty(path.add(Path.PathItem.of(1))) // the path of matching prop is the path on the expected object
-                .assertExtraProperty(path.add(Path.PathItem.of(1))) // the path of extra property is the path on the received object not on the expected
-                .assertExtraProperty(path.add(Path.PathItem.of(3)))
+                .assertNonMatchingProperty(path.add(Path.PathItem.of(1)))
+                .assertExtraProperty(path.add(Path.PathItem.of(2)))
                 .validate(result);
     }
 
