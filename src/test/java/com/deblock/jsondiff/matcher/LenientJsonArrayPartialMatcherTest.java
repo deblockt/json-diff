@@ -24,9 +24,9 @@ class LenientJsonArrayPartialMatcherTest {
 
         final var result = new LenientJsonArrayPartialMatcher().jsonDiff(path, array1, array2, jsonMatcher);
 
-        assertEquals(100, result.similarityRate());
         assertEquals(path, result.path());
         new JsonDiffAsserter()
+                .assertSimilarityRate(100)
                 .assertMatchingProperty(path.add(Path.PathItem.of(0)))
                 .assertMatchingProperty(path.add(Path.PathItem.of(1)))
                 .validate(result);
@@ -41,9 +41,9 @@ class LenientJsonArrayPartialMatcherTest {
 
         final var result = new LenientJsonArrayPartialMatcher().jsonDiff(path, array1, array2, jsonMatcher);
 
-        assertEquals(100, result.similarityRate());
         assertEquals(path, result.path());
         new JsonDiffAsserter()
+                .assertSimilarityRate(100)
                 .assertMatchingProperty(path.add(Path.PathItem.of(0)))
                 .assertMatchingProperty(path.add(Path.PathItem.of(1)))
                 .validate(result);
@@ -58,9 +58,9 @@ class LenientJsonArrayPartialMatcherTest {
 
         final var result = new LenientJsonArrayPartialMatcher().jsonDiff(path, array1, array2, jsonMatcher);
 
-        assertEquals(100, result.similarityRate());
         assertEquals(path, result.path());
         new JsonDiffAsserter()
+                .assertSimilarityRate(100)
                 .validate(result);
     }
 
@@ -73,9 +73,9 @@ class LenientJsonArrayPartialMatcherTest {
 
         final var result = new LenientJsonArrayPartialMatcher().jsonDiff(path, array1, array2, jsonMatcher);
 
-        assertEquals(0, result.similarityRate());
         assertEquals(path, result.path());
         new JsonDiffAsserter()
+                .assertSimilarityRate(0)
                 .assertNonMatchingProperty(path.add(Path.PathItem.of(0)))
                 .assertNonMatchingProperty(path.add(Path.PathItem.of(1)))
                 .validate(result);
@@ -90,9 +90,9 @@ class LenientJsonArrayPartialMatcherTest {
 
         final var result = new LenientJsonArrayPartialMatcher().jsonDiff(path, array1, array2, jsonMatcher);
 
-        assertEquals(50, result.similarityRate());
         assertEquals(path, result.path());
         new JsonDiffAsserter()
+                .assertSimilarityRate(50)
                 .assertMissingProperty(path.add(Path.PathItem.of(0)))
                 .assertMatchingProperty(path.add(Path.PathItem.of(1)))
                 .validate(result);
@@ -107,9 +107,9 @@ class LenientJsonArrayPartialMatcherTest {
 
         final var result = new LenientJsonArrayPartialMatcher().jsonDiff(path, array1, array2, jsonMatcher);
 
-        assertEquals(50, result.similarityRate());
         assertEquals(path, result.path());
         new JsonDiffAsserter()
+                .assertSimilarityRate(50)
                 .assertMatchingProperty(path.add(Path.PathItem.of(0)))
                 .assertMatchingProperty(path.add(Path.PathItem.of(1))) // the path of matching prop is the path on the expected object
                 .assertExtraProperty(path.add(Path.PathItem.of(1))) // the path of extra property is the path on the received object not on the expected

@@ -33,6 +33,21 @@ class StrictJsonArrayPartialMatcherTest {
     }
 
     @Test
+    void shouldReturnFullMatchForEmptyArray() {
+        final var array1 = new ArrayNode(null, List.of());
+        final var array2 = new ArrayNode(null, List.of());
+        final var jsonMatcher = Mockito.mock(JsonMatcher.class);
+        Mockito.when(jsonMatcher.diff(any(), any(), any())).thenAnswer(this::matchByEquality);
+
+        final var result = new StrictJsonArrayPartialMatcher().jsonDiff(path, array1, array2, jsonMatcher);
+
+        assertEquals(path, result.path());
+        new JsonDiffAsserter()
+                .assertSimilarityRate(100)
+                .validate(result);
+    }
+
+    @Test
     void shouldReturnNoMatchWhenItemsAreNonOrdered() {
         final var array1 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b")));
         final var array2 = new ArrayNode(null, List.of(TextNode.valueOf("b"), TextNode.valueOf("a")));
