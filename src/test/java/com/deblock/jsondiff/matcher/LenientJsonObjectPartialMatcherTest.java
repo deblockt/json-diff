@@ -22,8 +22,11 @@ class LenientJsonObjectPartialMatcherTest {
 
         final var result = new LenientJsonObjectPartialMatcher().jsonDiff(path, object1, object2, null);
 
-        assertEquals(100, result.similarityRate());
         assertEquals(path, result.path());
+        new JsonDiffAsserter()
+                .assertSimilarityRate(60, 40)
+                .assertPrimaryMatching(path)
+                .validate(result);
     }
 
     @Test

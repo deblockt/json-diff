@@ -90,7 +90,7 @@ public class JsonDiffAsserter implements JsonDiffViewer {
         }
         jsonDiff.display(this);
 
-        final var allErrors = Stream.of(missingPropertyAsserters, nonMatchingPropertyAsserters, matchingPropertyAsserters, primaryNonMatchingAsserters, extraPropertyAsserters)
+        final var allErrors = Stream.of(primaryMatchingAsserters, missingPropertyAsserters, nonMatchingPropertyAsserters, matchingPropertyAsserters, primaryNonMatchingAsserters, extraPropertyAsserters)
                 .flatMap(Collection::stream)
                 .filter(asserter -> !asserter.isDone())
                 .map(Asserter::getError)

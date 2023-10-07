@@ -9,6 +9,7 @@
     "a": "1",
     "c": "5"
   },
+  "emptyObject": {},
   "arrayWithObjectWithIssue": [
     {
       "a": {
