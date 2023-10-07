@@ -12,6 +12,7 @@
   "extraObject": {
     "a": "1"
   },
+  "emptyObject": {},
   "arrayWithObjectWithIssue": [
     {
       "a": {

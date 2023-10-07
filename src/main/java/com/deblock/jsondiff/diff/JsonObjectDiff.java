@@ -3,6 +3,7 @@ package com.deblock.jsondiff.diff;
 import com.deblock.jsondiff.matcher.Path;
 import com.deblock.jsondiff.viewer.JsonDiffViewer;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -73,6 +74,10 @@ public class JsonObjectDiff implements JsonDiff {
         }
         for (final var entry: extraProperties.entrySet()) {
             viewer.extraProperty(path().add(Path.PathItem.of(entry.getKey())), entry.getValue());
+        }
+        final var isEmptyObject = notFoundProperties.isEmpty() && propertiesDiff.isEmpty() && extraProperties.isEmpty();
+        if (isEmptyObject) {
+            viewer.primaryMatching(path(), new ObjectNode(null));
         }
     }
 
