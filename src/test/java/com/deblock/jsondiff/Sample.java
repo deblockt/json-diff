@@ -21,7 +21,7 @@ public class Sample {
         final var jsondiff = DiffGenerator.diff(expectedJson, receivedJson, jsonMatcher);
 
         // use the viewer to collect diff data
-        final var errorsResult= PatchDiffViewer.from(jsondiff);
+        final var errorsResult = PatchDiffViewer.from(jsondiff);
 
         // print the diff result
         System.out.println(errorsResult);
