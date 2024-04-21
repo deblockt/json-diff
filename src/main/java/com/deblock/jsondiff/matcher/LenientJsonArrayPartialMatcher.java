@@ -57,6 +57,11 @@ public class LenientJsonArrayPartialMatcher implements PartialJsonMatcher<ArrayN
         return diff;
     }
 
+    @Override
+    public boolean manage(JsonNode expected, JsonNode received) {
+        return expected.isArray() && received.isArray();
+    }
+
     private double maxSimilarityRate(Map.Entry<Integer, Map<Integer, JsonDiff>> entry) {
         return entry.getValue().values().stream().mapToDouble(JsonDiff::similarityRate).max().orElse(0);
     }

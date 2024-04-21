@@ -2,6 +2,7 @@ package com.deblock.jsondiff.matcher;
 
 import com.deblock.jsondiff.diff.JsonDiff;
 import com.deblock.jsondiff.diff.JsonObjectDiff;
+import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.node.ObjectNode;
 
 public class StrictJsonObjectPartialMatcher implements PartialJsonMatcher<ObjectNode> {
@@ -36,5 +37,10 @@ public class StrictJsonObjectPartialMatcher implements PartialJsonMatcher<Object
                 });
 
         return jsonDiff;
+    }
+
+    @Override
+    public boolean manage(JsonNode expected, JsonNode received) {
+        return expected.isObject() && received.isObject();
     }
 }
