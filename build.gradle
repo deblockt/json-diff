@@ -50,9 +50,8 @@ java {
     withJavadocJar()
     withSourcesJar()
 
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
+    sourceCompatibility = JavaLanguageVersion.of(11)
+    targetCompatibility = JavaLanguageVersion.of(11)
 }
 
 test {
