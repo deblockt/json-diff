@@ -6,32 +6,24 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ValueNode;
 
-public class CompositeJsonMatcher implements JsonMatcher {
-    private final PartialJsonMatcher<ArrayNode> jsonArrayPartialMatcher;
-    private final PartialJsonMatcher<ObjectNode> jsonObjectPartialMatcher;
-    private final PartialJsonMatcher<ValueNode> primitivePartialMatcher;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-    public CompositeJsonMatcher(
-        PartialJsonMatcher<ArrayNode> jsonArrayPartialMatcher,
-        PartialJsonMatcher<ObjectNode> jsonObjectPartialMatcher,
-        PartialJsonMatcher<ValueNode> primitivePartialMatcher
-    ) {
-        this.jsonArrayPartialMatcher = jsonArrayPartialMatcher;
-        this.jsonObjectPartialMatcher = jsonObjectPartialMatcher;
-        this.primitivePartialMatcher = primitivePartialMatcher;
+public class CompositeJsonMatcher implements JsonMatcher {
+    private final List<PartialJsonMatcher<JsonNode>> matchers;
+
+    public CompositeJsonMatcher(PartialJsonMatcher<?> ...jsonArrayPartialMatcher) {
+        this.matchers = new ArrayList<>();
+        Arrays.stream(jsonArrayPartialMatcher).forEach(it -> this.matchers.add((PartialJsonMatcher<JsonNode>) it));
     }
 
     @Override
     public JsonDiff diff(Path path, JsonNode expected, JsonNode received) {
-        if (expected instanceof ObjectNode  && received instanceof ObjectNode) {
-            return this.jsonObjectPartialMatcher.jsonDiff(path, (ObjectNode) expected, (ObjectNode) received, this);
-        } else if (expected instanceof ArrayNode && received instanceof ArrayNode) {
-            return this.jsonArrayPartialMatcher.jsonDiff(path, (ArrayNode) expected, (ArrayNode) received, this);
-        } else if (expected instanceof ValueNode && received instanceof ValueNode){
-            return this.primitivePartialMatcher.jsonDiff(path, (ValueNode) expected, (ValueNode) received, this);
-        } else {
-            return new UnMatchedPrimaryDiff(path, expected, received);
-        }
+        return this.matchers.stream()
+                .filter(matcher -> matcher.manage(expected, received))
+                .findFirst()
+                .map(matcher -> matcher.jsonDiff(path, expected, received, this))
+                .orElseGet(() -> new UnMatchedPrimaryDiff(path, expected, received));
     }
-
 }

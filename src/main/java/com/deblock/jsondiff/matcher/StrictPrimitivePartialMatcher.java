@@ -3,6 +3,7 @@ package com.deblock.jsondiff.matcher;
 import com.deblock.jsondiff.diff.JsonDiff;
 import com.deblock.jsondiff.diff.MatchedPrimaryDiff;
 import com.deblock.jsondiff.diff.UnMatchedPrimaryDiff;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ValueNode;
 
 import java.util.Objects;
@@ -16,5 +17,10 @@ public class StrictPrimitivePartialMatcher implements PartialJsonMatcher<ValueNo
         } else {
             return new UnMatchedPrimaryDiff(path, expectedValue, receivedValue);
         }
+    }
+
+    @Override
+    public boolean manage(JsonNode expected, JsonNode received) {
+        return expected.isValueNode() && received.isValueNode();
     }
 }

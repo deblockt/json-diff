@@ -3,6 +3,7 @@ package com.deblock.jsondiff.matcher;
 import com.deblock.jsondiff.diff.JsonDiff;
 import com.deblock.jsondiff.diff.MatchedPrimaryDiff;
 import com.deblock.jsondiff.diff.UnMatchedPrimaryDiff;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.NumericNode;
 import com.fasterxml.jackson.databind.node.ValueNode;
 
@@ -29,5 +30,10 @@ public class LenientNumberPrimitivePartialMatcher implements PartialJsonMatcher<
         }
 
         return delegated.jsonDiff(path, expectedValue, receivedValue, jsonMatcher);
+    }
+
+    @Override
+    public boolean manage(JsonNode expected, JsonNode received) {
+        return expected.isValueNode() && received.isValueNode();
     }
 }

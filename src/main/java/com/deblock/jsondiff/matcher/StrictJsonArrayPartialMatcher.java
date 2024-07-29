@@ -2,6 +2,7 @@ package com.deblock.jsondiff.matcher;
 
 import com.deblock.jsondiff.diff.JsonArrayDiff;
 import com.deblock.jsondiff.diff.JsonDiff;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import java.util.Comparator;
@@ -34,5 +35,10 @@ public class StrictJsonArrayPartialMatcher implements PartialJsonMatcher<ArrayNo
             }
         }
         return diff;
+    }
+
+    @Override
+    public boolean manage(JsonNode expected, JsonNode received) {
+        return expected.isArray() && received.isArray();
     }
 }

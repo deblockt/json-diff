@@ -2,6 +2,7 @@ package com.deblock.jsondiff.matcher;
 
 import com.deblock.jsondiff.diff.JsonDiff;
 import com.deblock.jsondiff.diff.JsonObjectDiff;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class LenientJsonObjectPartialMatcher implements PartialJsonMatcher<ObjectNode> {
@@ -25,5 +26,10 @@ public class LenientJsonObjectPartialMatcher implements PartialJsonMatcher<Objec
             });
 
         return jsonDiff;
+    }
+
+    @Override
+    public boolean manage(JsonNode expected, JsonNode received) {
+        return expected.isObject() && received.isObject();
     }
 }
