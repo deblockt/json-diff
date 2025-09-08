@@ -20,13 +20,13 @@ maven:
 <dependency>
     <groupId>io.github.deblockt</groupId>
     <artifactId>json-diff</artifactId>
-    <version>0.1.0</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
 gradle:
 ```gradle
-implementation 'io.github.deblockt:json-diff:0.1.0'
+implementation 'io.github.deblockt:json-diff:1.1.0'
 ```
 
 ## Usage
