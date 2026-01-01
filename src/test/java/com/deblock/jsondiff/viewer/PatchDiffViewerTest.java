@@ -25,7 +25,8 @@ public class PatchDiffViewerTest {
         final var jsonMatcher = new CompositeJsonMatcher(
                 new LenientJsonArrayPartialMatcher(),
                 new LenientJsonObjectPartialMatcher(),
-                new LenientNumberPrimitivePartialMatcher(new StrictPrimitivePartialMatcher())
+                new LenientNumberPrimitivePartialMatcher(),
+                new StrictPrimitivePartialMatcher()
         );
         final var jsondiff = DiffGenerator.diff(expectedJson, actualJson, jsonMatcher);
 

@@ -15,7 +15,8 @@ public class Sample {
             new NullEqualsEmptyArrayMatcher(),
             new LenientJsonArrayPartialMatcher(), // comparing array using lenient mode (ignore array order and extra items)
             new LenientJsonObjectPartialMatcher(), // comparing object using lenient mode (ignoring extra properties)
-            new LenientNumberPrimitivePartialMatcher(new StrictPrimitivePartialMatcher()) // comparing primitive types and manage numbers (100.00 == 100)
+            new LenientNumberPrimitivePartialMatcher(), // comparing numbers leniently (100.00 == 100)
+            new StrictPrimitivePartialMatcher() // comparing other primitive types strictly
         );
 
         // generate a diff

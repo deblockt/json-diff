@@ -100,18 +100,6 @@ Output:
 
 `CompositeJsonMatcher` accepts multiple matchers that handle different JSON types. The order matters: the first matcher that can handle a comparison will be used.
 
-### Lenient Mode
-
-Ignores extra properties and array order:
-
-```java
-final var lenientMatcher = new CompositeJsonMatcher(
-    new LenientJsonArrayPartialMatcher(),  // Ignores array order and extra items
-    new LenientJsonObjectPartialMatcher(), // Ignores extra properties
-    new LenientNumberPrimitivePartialMatcher(new StrictPrimitivePartialMatcher()) // 10.0 == 10
-);
-```
-
 ### Strict Mode
 
 Requires exact matches:
@@ -121,6 +109,19 @@ final var strictMatcher = new CompositeJsonMatcher(
     new StrictJsonArrayPartialMatcher(),  // Same items in same order
     new StrictJsonObjectPartialMatcher(), // Same properties, no extras
     new StrictPrimitivePartialMatcher()   // Exact type and value match
+);
+```
+
+### Lenient Mode
+
+Ignores extra properties and array order:
+
+```java
+final var lenientMatcher = new CompositeJsonMatcher(
+    new LenientJsonArrayPartialMatcher(),  // Ignores array order and extra items
+    new LenientJsonObjectPartialMatcher(), // Ignores extra properties
+    new LenientNumberPrimitivePartialMatcher(), // 10.0 == 10
+    new StrictPrimitivePartialMatcher()        // Other primitives
 );
 ```
 
@@ -224,7 +225,8 @@ final var receivedJson = """
 final var jsonMatcher = new CompositeJsonMatcher(
     new LenientJsonArrayPartialMatcher(),
     new LenientJsonObjectPartialMatcher(),
-    new LenientNumberPrimitivePartialMatcher(new StrictPrimitivePartialMatcher())
+    new LenientNumberPrimitivePartialMatcher(),
+    new StrictPrimitivePartialMatcher()
 );
 
 final var diff = DiffGenerator.diff(expectedJson, receivedJson, jsonMatcher);
