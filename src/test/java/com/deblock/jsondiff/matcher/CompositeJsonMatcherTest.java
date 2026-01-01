@@ -1,11 +1,13 @@
 package com.deblock.jsondiff.matcher;
 
 import com.deblock.jsondiff.diff.JsonDiff;
+import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.node.*;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 
 public class CompositeJsonMatcherTest {
     private final static Path path = Path.ROOT.add(Path.PathItem.of("property"));
@@ -16,10 +18,20 @@ public class CompositeJsonMatcherTest {
         final var array2 = new ArrayNode(null);
 
         final var arrayMatcher = (PartialJsonMatcher<ArrayNode>) Mockito.mock(PartialJsonMatcher.class);
+        final var objectMatcher = (PartialJsonMatcher<ObjectNode>) Mockito.mock(PartialJsonMatcher.class);
+        final var primitiveMatcher = (PartialJsonMatcher<ValueNode>) Mockito.mock(PartialJsonMatcher.class);
+
+        Mockito.when(arrayMatcher.manage(any(), any())).thenAnswer(inv ->
+            ((JsonNode)inv.getArgument(0)).isArray() && ((JsonNode)inv.getArgument(1)).isArray());
+        Mockito.when(objectMatcher.manage(any(), any())).thenAnswer(inv ->
+            ((JsonNode)inv.getArgument(0)).isObject() && ((JsonNode)inv.getArgument(1)).isObject());
+        Mockito.when(primitiveMatcher.manage(any(), any())).thenAnswer(inv ->
+            ((JsonNode)inv.getArgument(0)).isValueNode() && ((JsonNode)inv.getArgument(1)).isValueNode());
+
         final var compositeMatcher = new CompositeJsonMatcher(
             arrayMatcher,
-            (PartialJsonMatcher<ObjectNode>) Mockito.mock(PartialJsonMatcher.class),
-            (PartialJsonMatcher<ValueNode>) Mockito.mock(PartialJsonMatcher.class)
+            objectMatcher,
+            primitiveMatcher
         );
         final var expectedJsonDiff = Mockito.mock(JsonDiff.class);
         Mockito.when(arrayMatcher.jsonDiff(path, array1, array2, compositeMatcher)).thenReturn(expectedJsonDiff);
@@ -34,11 +46,21 @@ public class CompositeJsonMatcherTest {
         final var object1 = new ObjectNode(null);
         final var object2 = new ObjectNode(null);
 
+        final var arrayMatcher = (PartialJsonMatcher<ArrayNode>) Mockito.mock(PartialJsonMatcher.class);
         final var objectMatcher = (PartialJsonMatcher<ObjectNode>) Mockito.mock(PartialJsonMatcher.class);
+        final var primitiveMatcher = (PartialJsonMatcher<ValueNode>) Mockito.mock(PartialJsonMatcher.class);
+
+        Mockito.when(arrayMatcher.manage(any(), any())).thenAnswer(inv ->
+            ((JsonNode)inv.getArgument(0)).isArray() && ((JsonNode)inv.getArgument(1)).isArray());
+        Mockito.when(objectMatcher.manage(any(), any())).thenAnswer(inv ->
+            ((JsonNode)inv.getArgument(0)).isObject() && ((JsonNode)inv.getArgument(1)).isObject());
+        Mockito.when(primitiveMatcher.manage(any(), any())).thenAnswer(inv ->
+            ((JsonNode)inv.getArgument(0)).isValueNode() && ((JsonNode)inv.getArgument(1)).isValueNode());
+
         final var compositeMatcher = new CompositeJsonMatcher(
-            (PartialJsonMatcher<ArrayNode>) Mockito.mock(PartialJsonMatcher.class),
+            arrayMatcher,
             objectMatcher,
-            (PartialJsonMatcher<ValueNode>) Mockito.mock(PartialJsonMatcher.class)
+            primitiveMatcher
         );
         final var expectedJsonDiff = Mockito.mock(JsonDiff.class);
         Mockito.when(objectMatcher.jsonDiff(path, object1, object2, compositeMatcher)).thenReturn(expectedJsonDiff);
@@ -53,10 +75,20 @@ public class CompositeJsonMatcherTest {
         final var value1 = StringNode.valueOf("");
         final var value2 = IntNode.valueOf(10);
 
+        final var arrayMatcher = (PartialJsonMatcher<ArrayNode>) Mockito.mock(PartialJsonMatcher.class);
+        final var objectMatcher = (PartialJsonMatcher<ObjectNode>) Mockito.mock(PartialJsonMatcher.class);
         final var primitiveMatcher = (PartialJsonMatcher<ValueNode>) Mockito.mock(PartialJsonMatcher.class);
+
+        Mockito.when(arrayMatcher.manage(any(), any())).thenAnswer(inv ->
+            ((JsonNode)inv.getArgument(0)).isArray() && ((JsonNode)inv.getArgument(1)).isArray());
+        Mockito.when(objectMatcher.manage(any(), any())).thenAnswer(inv ->
+            ((JsonNode)inv.getArgument(0)).isObject() && ((JsonNode)inv.getArgument(1)).isObject());
+        Mockito.when(primitiveMatcher.manage(any(), any())).thenAnswer(inv ->
+            ((JsonNode)inv.getArgument(0)).isValueNode() && ((JsonNode)inv.getArgument(1)).isValueNode());
+
         final var compositeMatcher = new CompositeJsonMatcher(
-            (PartialJsonMatcher<ArrayNode>) Mockito.mock(PartialJsonMatcher.class),
-            (PartialJsonMatcher<ObjectNode>) Mockito.mock(PartialJsonMatcher.class),
+            arrayMatcher,
+            objectMatcher,
             primitiveMatcher
         );
         final var expectedJsonDiff = Mockito.mock(JsonDiff.class);
@@ -72,10 +104,21 @@ public class CompositeJsonMatcherTest {
         final var value1 = StringNode.valueOf("");
         final var value2 = new ObjectNode(null);
 
+        final var arrayMatcher = (PartialJsonMatcher<ArrayNode>) Mockito.mock(PartialJsonMatcher.class);
+        final var objectMatcher = (PartialJsonMatcher<ObjectNode>) Mockito.mock(PartialJsonMatcher.class);
+        final var primitiveMatcher = (PartialJsonMatcher<ValueNode>) Mockito.mock(PartialJsonMatcher.class);
+
+        Mockito.when(arrayMatcher.manage(any(), any())).thenAnswer(inv ->
+            ((JsonNode)inv.getArgument(0)).isArray() && ((JsonNode)inv.getArgument(1)).isArray());
+        Mockito.when(objectMatcher.manage(any(), any())).thenAnswer(inv ->
+            ((JsonNode)inv.getArgument(0)).isObject() && ((JsonNode)inv.getArgument(1)).isObject());
+        Mockito.when(primitiveMatcher.manage(any(), any())).thenAnswer(inv ->
+            ((JsonNode)inv.getArgument(0)).isValueNode() && ((JsonNode)inv.getArgument(1)).isValueNode());
+
         final var compositeMatcher = new CompositeJsonMatcher(
-            (PartialJsonMatcher<ArrayNode>) Mockito.mock(PartialJsonMatcher.class),
-            (PartialJsonMatcher<ObjectNode>) Mockito.mock(PartialJsonMatcher.class),
-            (PartialJsonMatcher<ValueNode>) Mockito.mock(PartialJsonMatcher.class)
+            arrayMatcher,
+            objectMatcher,
+            primitiveMatcher
         );
 
         final var result = compositeMatcher.diff(path, value1, value2);
