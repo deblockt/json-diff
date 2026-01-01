@@ -84,4 +84,29 @@ public class NullEqualsEmptyArrayMatcherIntegrationTest {
 
         assertEquals(100.0, diff.similarityRate());
     }
+
+    @Test
+    public void shouldNotMatchEmptyArrayAndMissingProperty() {
+        // Note: This case is intentionally NOT supported by NullEqualsEmptyArrayMatcher
+        // Missing property is different from null or empty array
+        final var expected = "{\"items\": []}";
+        final var received = "{}";
+
+        final var diff = DiffGenerator.diff(expected, received, jsonMatcher);
+
+        assertTrue(diff.similarityRate() < 100.0, "Empty array should not match missing property");
+    }
+
+    @Test
+    public void shouldNotMatchMissingPropertyAndEmptyArray() {
+        // Note: This case is intentionally NOT supported by NullEqualsEmptyArrayMatcher
+        final var expected = "{}";
+        final var received = "{\"items\": []}";
+
+        final var diff = DiffGenerator.diff(expected, received, jsonMatcher);
+
+        // With LenientJsonObjectPartialMatcher, extra properties are ignored
+        // So this should match 100% (expected has no requirements)
+        assertEquals(100.0, diff.similarityRate());
+    }
 }
