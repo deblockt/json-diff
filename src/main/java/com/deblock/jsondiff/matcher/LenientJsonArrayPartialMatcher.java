@@ -2,16 +2,10 @@ package com.deblock.jsondiff.matcher;
 
 import com.deblock.jsondiff.diff.JsonArrayDiff;
 import com.deblock.jsondiff.diff.JsonDiff;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class LenientJsonArrayPartialMatcher implements PartialJsonMatcher<ArrayNode> {
@@ -99,9 +93,9 @@ public class LenientJsonArrayPartialMatcher implements PartialJsonMatcher<ArrayN
         return new MismatchPair<>(expectedMissing, actualMissing);
     }
 
-    private NodeCounter getElementsWithCount(Iterator<JsonNode> elements) {
+    private NodeCounter getElementsWithCount(Collection<JsonNode> elements) {
         var nodeCounter = new NodeCounter();
-        elements.forEachRemaining(nodeCounter::addNode);
+        elements.forEach(nodeCounter::addNode);
         return nodeCounter;
     }
 

@@ -2,7 +2,7 @@ package com.deblock.jsondiff.matcher;
 
 import com.deblock.jsondiff.diff.JsonArrayDiff;
 import com.deblock.jsondiff.diff.JsonDiff;
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ArrayNode;
 
 import java.util.Comparator;
 import java.util.HashMap;

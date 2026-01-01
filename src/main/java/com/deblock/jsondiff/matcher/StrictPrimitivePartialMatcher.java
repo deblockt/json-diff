@@ -3,7 +3,7 @@ package com.deblock.jsondiff.matcher;
 import com.deblock.jsondiff.diff.JsonDiff;
 import com.deblock.jsondiff.diff.MatchedPrimaryDiff;
 import com.deblock.jsondiff.diff.UnMatchedPrimaryDiff;
-import com.fasterxml.jackson.databind.node.ValueNode;
+import tools.jackson.databind.node.ValueNode;
 
 import java.util.Objects;
 

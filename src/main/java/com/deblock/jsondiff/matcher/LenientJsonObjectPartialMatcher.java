@@ -2,7 +2,7 @@ package com.deblock.jsondiff.matcher;
 
 import com.deblock.jsondiff.diff.JsonDiff;
 import com.deblock.jsondiff.diff.JsonObjectDiff;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.node.ObjectNode;
 
 public class LenientJsonObjectPartialMatcher implements PartialJsonMatcher<ObjectNode> {
 
@@ -10,8 +10,8 @@ public class LenientJsonObjectPartialMatcher implements PartialJsonMatcher<Objec
     public JsonDiff jsonDiff(Path path, ObjectNode expectedJson, ObjectNode receivedJson, JsonMatcher jsonMatcher) {
         final var jsonDiff = new JsonObjectDiff(path);
 
-        expectedJson.fields()
-            .forEachRemaining(entry -> {
+        expectedJson.properties()
+            .forEach(entry -> {
                 final var expectedPropertyName = entry.getKey();
                 final var expectedValue = entry.getValue();
                 final var receivedValue = receivedJson.get(expectedPropertyName);

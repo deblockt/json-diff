@@ -2,8 +2,8 @@ package com.deblock.jsondiff.diff;
 
 import com.deblock.jsondiff.matcher.Path;
 import com.deblock.jsondiff.viewer.JsonDiffViewer;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ObjectNode;
 
 import java.util.HashMap;
 import java.util.Map;

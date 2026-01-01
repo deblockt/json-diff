@@ -1,9 +1,9 @@
 package com.deblock.jsondiff.matcher;
 
-import com.fasterxml.jackson.databind.node.BooleanNode;
-import com.fasterxml.jackson.databind.node.DecimalNode;
-import com.fasterxml.jackson.databind.node.IntNode;
-import com.fasterxml.jackson.databind.node.TextNode;
+import tools.jackson.databind.node.BooleanNode;
+import tools.jackson.databind.node.DecimalNode;
+import tools.jackson.databind.node.IntNode;
+import tools.jackson.databind.node.StringNode;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -16,8 +16,8 @@ public class StrictPrimitivePartialMatcherTest {
 
     @Test
     public void shouldReturnAFullMatchIfNodeAreEqualsString() {
-        final var string1 = TextNode.valueOf("a");
-        final var string2 = TextNode.valueOf("a");
+        final var string1 = StringNode.valueOf("a");
+        final var string2 = StringNode.valueOf("a");
 
         final var jsonDiff = new StrictPrimitivePartialMatcher().jsonDiff(expectedPath, string1, string2, Mockito.mock(JsonMatcher.class));
 
@@ -30,8 +30,8 @@ public class StrictPrimitivePartialMatcherTest {
 
     @Test
     public void shouldReturnANoMatchIfNodeAreNotEqualsString() {
-        final var string1 = TextNode.valueOf("a");
-        final var string2 = TextNode.valueOf("c");
+        final var string1 = StringNode.valueOf("a");
+        final var string2 = StringNode.valueOf("c");
 
         final var jsonDiff = new StrictPrimitivePartialMatcher().jsonDiff(expectedPath, string1, string2, Mockito.mock(JsonMatcher.class));
 
@@ -101,7 +101,7 @@ public class StrictPrimitivePartialMatcherTest {
     @Test
     public void shouldReturnANonMatchIfNodeHaveDifferentType() {
         final var value1 = IntNode.valueOf(100);
-        final var value2 = TextNode.valueOf("100");
+        final var value2 = StringNode.valueOf("100");
 
         final var jsonDiff = new StrictPrimitivePartialMatcher().jsonDiff(expectedPath, value1, value2, Mockito.mock(JsonMatcher.class));
 

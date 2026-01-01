@@ -2,8 +2,8 @@ package com.deblock.jsondiff.matcher;
 
 import com.deblock.jsondiff.diff.JsonDiff;
 import com.deblock.jsondiff.viewer.JsonDiffViewer;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.TextNode;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.StringNode;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -17,8 +17,8 @@ class LenientJsonArrayPartialMatcherTest {
 
     @Test
     void shouldReturnFullMatchWhenAllItemsAreFound() {
-        final var array1 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b")));
-        final var array2 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b")));
+        final var array1 = new ArrayNode(null, List.of(StringNode.valueOf("a"), StringNode.valueOf("b")));
+        final var array2 = new ArrayNode(null, List.of(StringNode.valueOf("a"), StringNode.valueOf("b")));
         final var jsonMatcher = Mockito.mock(JsonMatcher.class);
         Mockito.when(jsonMatcher.diff(any(), any(), any())).thenAnswer(this::matchByEquality);
 
@@ -34,8 +34,8 @@ class LenientJsonArrayPartialMatcherTest {
 
     @Test
     void shouldReturnFullMatchWhenAllItemsAreFoundWithBadOrder() {
-        final var array1 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b")));
-        final var array2 = new ArrayNode(null, List.of(TextNode.valueOf("b"), TextNode.valueOf("a")));
+        final var array1 = new ArrayNode(null, List.of(StringNode.valueOf("a"), StringNode.valueOf("b")));
+        final var array2 = new ArrayNode(null, List.of(StringNode.valueOf("b"), StringNode.valueOf("a")));
         final var jsonMatcher = Mockito.mock(JsonMatcher.class);
         Mockito.when(jsonMatcher.diff(any(), any(), any())).thenAnswer(this::matchByEquality);
 
@@ -66,8 +66,8 @@ class LenientJsonArrayPartialMatcherTest {
 
     @Test
     void shouldReturnNoMatchWhenSameNumberItemWithNoMatch() {
-        final var array1 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b")));
-        final var array2 = new ArrayNode(null, List.of(TextNode.valueOf("c"), TextNode.valueOf("d")));
+        final var array1 = new ArrayNode(null, List.of(StringNode.valueOf("a"), StringNode.valueOf("b")));
+        final var array2 = new ArrayNode(null, List.of(StringNode.valueOf("c"), StringNode.valueOf("d")));
         final var jsonMatcher = Mockito.mock(JsonMatcher.class);
         Mockito.when(jsonMatcher.diff(any(), any(), any())).thenAnswer(this::matchByEquality);
 
@@ -83,8 +83,8 @@ class LenientJsonArrayPartialMatcherTest {
 
     @Test
     void shouldReturnPartialMatchWhenMissingItem() {
-        final var array1 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b")));
-        final var array2 = new ArrayNode(null, List.of(TextNode.valueOf("b")));
+        final var array1 = new ArrayNode(null, List.of(StringNode.valueOf("a"), StringNode.valueOf("b")));
+        final var array2 = new ArrayNode(null, List.of(StringNode.valueOf("b")));
         final var jsonMatcher = Mockito.mock(JsonMatcher.class);
         Mockito.when(jsonMatcher.diff(any(), any(), any())).thenAnswer(this::matchByEquality);
 
@@ -100,8 +100,8 @@ class LenientJsonArrayPartialMatcherTest {
 
     @Test
     void shouldReturnPartialMatchWhenExtraItems() {
-        final var array1 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("c")));
-        final var array2 = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b"), TextNode.valueOf("c"), TextNode.valueOf("d")));
+        final var array1 = new ArrayNode(null, List.of(StringNode.valueOf("a"), StringNode.valueOf("c")));
+        final var array2 = new ArrayNode(null, List.of(StringNode.valueOf("a"), StringNode.valueOf("b"), StringNode.valueOf("c"), StringNode.valueOf("d")));
         final var jsonMatcher = Mockito.mock(JsonMatcher.class);
         Mockito.when(jsonMatcher.diff(any(), any(), any())).thenAnswer(this::matchByEquality);
 
@@ -119,8 +119,8 @@ class LenientJsonArrayPartialMatcherTest {
 
     @Test
     void shouldWorkWithDuplicatedArrayItemsOnExpected() {
-        final var expected = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("a"), TextNode.valueOf("b")));
-        final var actual = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b")));
+        final var expected = new ArrayNode(null, List.of(StringNode.valueOf("a"), StringNode.valueOf("a"), StringNode.valueOf("b")));
+        final var actual = new ArrayNode(null, List.of(StringNode.valueOf("a"), StringNode.valueOf("b")));
         final var jsonMatcher = Mockito.mock(JsonMatcher.class);
         Mockito.when(jsonMatcher.diff(any(), any(), any())).thenAnswer(this::matchByEquality);
 
@@ -137,8 +137,8 @@ class LenientJsonArrayPartialMatcherTest {
 
     @Test
     void shouldWorkWithDuplicatedArrayItemsOnActual() {
-        final var expected = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("b")));
-        final var actual = new ArrayNode(null, List.of(TextNode.valueOf("a"), TextNode.valueOf("a"), TextNode.valueOf("b")));
+        final var expected = new ArrayNode(null, List.of(StringNode.valueOf("a"), StringNode.valueOf("b")));
+        final var actual = new ArrayNode(null, List.of(StringNode.valueOf("a"), StringNode.valueOf("a"), StringNode.valueOf("b")));
         final var jsonMatcher = Mockito.mock(JsonMatcher.class);
         Mockito.when(jsonMatcher.diff(any(), any(), any())).thenAnswer(this::matchByEquality);
 
