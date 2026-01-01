@@ -2,7 +2,7 @@ package com.deblock.jsondiff.diff;
 
 import com.deblock.jsondiff.matcher.Path;
 import com.deblock.jsondiff.viewer.JsonDiffViewer;
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 
 public class MatchedPrimaryDiff implements JsonDiff {
     private final JsonNode value;

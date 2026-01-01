@@ -1,7 +1,7 @@
 package com.deblock.jsondiff.matcher;
 
 import com.deblock.jsondiff.diff.JsonDiff;
-import com.fasterxml.jackson.databind.node.*;
+import tools.jackson.databind.node.*;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -50,7 +50,7 @@ public class CompositeJsonMatcherTest {
 
     @Test
     public void shouldCallThePrimitiveMatcherIfTheTwoObjectAreValue() {
-        final var value1 = TextNode.valueOf("");
+        final var value1 = StringNode.valueOf("");
         final var value2 = IntNode.valueOf(10);
 
         final var primitiveMatcher = (PartialJsonMatcher<ValueNode>) Mockito.mock(PartialJsonMatcher.class);
@@ -69,7 +69,7 @@ public class CompositeJsonMatcherTest {
 
     @Test
     public void shouldReturnANonMatchWhenTypesAreDifferent() {
-        final var value1 = TextNode.valueOf("");
+        final var value1 = StringNode.valueOf("");
         final var value2 = new ObjectNode(null);
 
         final var compositeMatcher = new CompositeJsonMatcher(

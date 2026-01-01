@@ -1,7 +1,7 @@
 package com.deblock.jsondiff.matcher;
 
 import com.deblock.jsondiff.diff.*;
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 
 public interface JsonMatcher {
 

@@ -2,8 +2,8 @@ package com.deblock.jsondiff.matcher;
 
 import com.deblock.jsondiff.diff.JsonDiff;
 import com.deblock.jsondiff.viewer.JsonDiffViewer;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
+import tools.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.node.StringNode;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -32,8 +32,8 @@ class LenientJsonObjectPartialMatcherTest {
     @Test
     void shouldReturnNonMachIfAllPropertiesAreNotFound() {
         final var object1 = new ObjectNode(null, Map.of(
-            "a", TextNode.valueOf("a"),
-            "b", TextNode.valueOf("b")
+            "a", StringNode.valueOf("a"),
+            "b", StringNode.valueOf("b")
         ));
         final var object2 = new ObjectNode(null);
 
@@ -50,12 +50,12 @@ class LenientJsonObjectPartialMatcherTest {
     @Test
     void shouldReturnNonMatchingPropertyIfAllPropertiesAreFoundWithoutMatch() {
         final var object1 = new ObjectNode(null, Map.of(
-            "a", TextNode.valueOf("a"),
-            "b", TextNode.valueOf("b")
+            "a", StringNode.valueOf("a"),
+            "b", StringNode.valueOf("b")
         ));
         final var object2 = new ObjectNode(null, Map.of(
-            "a", TextNode.valueOf("c"),
-            "b", TextNode.valueOf("d")
+            "a", StringNode.valueOf("c"),
+            "b", StringNode.valueOf("d")
         ));
         final var parentMatcher = Mockito.mock(JsonMatcher.class);
         Mockito.when(parentMatcher.diff(any(), any(), any())).thenAnswer((args) -> nonMatchJsonDiff(args.getArgument(0)));
@@ -72,12 +72,12 @@ class LenientJsonObjectPartialMatcherTest {
     @Test
     void shouldMixMatchingAndNotFoundPropertiesOnSameResult() {
         final var object1 = new ObjectNode(null, Map.of(
-                "a", TextNode.valueOf("a"),
-                "b", TextNode.valueOf("b")
+                "a", StringNode.valueOf("a"),
+                "b", StringNode.valueOf("b")
         ));
         final var object2 = new ObjectNode(null, Map.of(
-                "a", TextNode.valueOf("a"),
-                "c", TextNode.valueOf("b")
+                "a", StringNode.valueOf("a"),
+                "c", StringNode.valueOf("b")
         ));
         final var parentMatcher = Mockito.mock(JsonMatcher.class);
         Mockito.when(parentMatcher.diff(any(), any(), any())).thenAnswer((args) -> fullMatchJsonDiff(args.getArgument(0)));
@@ -94,12 +94,12 @@ class LenientJsonObjectPartialMatcherTest {
     @Test
     void shouldReturnFullMatchingPropertyAllPropertiesAreFoundAndMatch() {
         final var object1 = new ObjectNode(null, Map.of(
-                "a", TextNode.valueOf("a"),
-                "b", TextNode.valueOf("b")
+                "a", StringNode.valueOf("a"),
+                "b", StringNode.valueOf("b")
         ));
         final var object2 = new ObjectNode(null, Map.of(
-                "a", TextNode.valueOf("a"),
-                "b", TextNode.valueOf("b")
+                "a", StringNode.valueOf("a"),
+                "b", StringNode.valueOf("b")
         ));
         final var parentMatcher = Mockito.mock(JsonMatcher.class);
         Mockito.when(parentMatcher.diff(any(), any(), any())).thenAnswer((args) -> fullMatchJsonDiff(args.getArgument(0)));
@@ -116,12 +116,12 @@ class LenientJsonObjectPartialMatcherTest {
     @Test
     void shouldReturnSimilarityIfOnlyOneProperty() {
         final var object1 = new ObjectNode(null, Map.of(
-                "a", TextNode.valueOf("a"),
-                "b", TextNode.valueOf("b"),
-                "c", TextNode.valueOf("b")
+                "a", StringNode.valueOf("a"),
+                "b", StringNode.valueOf("b"),
+                "c", StringNode.valueOf("b")
         ));
         final var object2 = new ObjectNode(null, Map.of(
-                "a", TextNode.valueOf("a")
+                "a", StringNode.valueOf("a")
         ));
         final var parentMatcher = Mockito.mock(JsonMatcher.class);
         Mockito.when(parentMatcher.diff(any(), any(), any())).thenAnswer((args) -> fullMatchJsonDiff(args.getArgument(0)));

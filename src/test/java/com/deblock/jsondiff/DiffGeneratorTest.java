@@ -3,9 +3,9 @@ package com.deblock.jsondiff;
 import com.deblock.jsondiff.diff.JsonDiff;
 import com.deblock.jsondiff.matcher.JsonMatcher;
 import com.deblock.jsondiff.matcher.Path;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.node.StringNode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -34,7 +34,7 @@ public class DiffGeneratorTest {
         final var receivedJson = "\"string1\"";
         final var matcher = Mockito.mock(JsonMatcher.class);
         final var diff = Mockito.mock(JsonDiff.class);
-        Mockito.when(matcher.diff(Path.ROOT, TextNode.valueOf("string1"), TextNode.valueOf("string1"))).thenReturn(diff);
+        Mockito.when(matcher.diff(Path.ROOT, StringNode.valueOf("string1"), StringNode.valueOf("string1"))).thenReturn(diff);
 
         final var result = DiffGenerator.diff(expectedJson, receivedJson, matcher);
 
@@ -45,7 +45,7 @@ public class DiffGeneratorTest {
     public void shouldSupportArrayDiff() {
         final var expectedJson = "[\"string1\"]";
         final var receivedJson = "[\"string1\"]";
-        final var jsonNode = new ArrayNode(null, List.of(TextNode.valueOf("string1")));
+        final var jsonNode = new ArrayNode(null, List.of(StringNode.valueOf("string1")));
         final var matcher = Mockito.mock(JsonMatcher.class);
         final var diff = Mockito.mock(JsonDiff.class);
         Mockito.when(matcher.diff(Path.ROOT, jsonNode, jsonNode)).thenReturn(diff);
@@ -59,7 +59,7 @@ public class DiffGeneratorTest {
     public void shouldSupportObjectDiff() {
         final var expectedJson = "{\"a\": \"string1\"}";
         final var receivedJson = "{\"a\": \"string1\"}";
-        final var jsonNode = new ObjectNode(null, Map.of("a", TextNode.valueOf("string1")));
+        final var jsonNode = new ObjectNode(null, Map.of("a", StringNode.valueOf("string1")));
         final var matcher = Mockito.mock(JsonMatcher.class);
         final var diff = Mockito.mock(JsonDiff.class);
         Mockito.when(matcher.diff(Path.ROOT, jsonNode, jsonNode)).thenReturn(diff);

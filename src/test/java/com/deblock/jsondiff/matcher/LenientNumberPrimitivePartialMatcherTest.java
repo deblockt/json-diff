@@ -1,9 +1,9 @@
 package com.deblock.jsondiff.matcher;
 
 import com.deblock.jsondiff.diff.JsonDiff;
-import com.fasterxml.jackson.databind.node.DecimalNode;
-import com.fasterxml.jackson.databind.node.IntNode;
-import com.fasterxml.jackson.databind.node.TextNode;
+import tools.jackson.databind.node.DecimalNode;
+import tools.jackson.databind.node.IntNode;
+import tools.jackson.databind.node.StringNode;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -77,7 +77,7 @@ public class LenientNumberPrimitivePartialMatcherTest {
     @Test
     public void shouldCallTheDelegatedIfNodeHaveDifferentType() {
         final var value1 = IntNode.valueOf(100);
-        final var value2 = TextNode.valueOf("100");
+        final var value2 = StringNode.valueOf("100");
         final var jsonMatcher = Mockito.mock(JsonMatcher.class);
         final var delegated = Mockito.mock(PartialJsonMatcher.class);
         final var expectedJsonDiff = Mockito.mock(JsonDiff.class);
