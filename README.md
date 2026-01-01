@@ -52,6 +52,14 @@ System.out.println(OnlyErrorDiffViewer.from(diff));
 System.out.println("Similarity: " + diff.similarityRate() + "%");
 ```
 
+Output:
+```
+The property "$.city" is not found
+The property "$.name" didn't match. Expected "John", Received: "Jane"
+
+Similarity: 50.0%
+```
+
 ## Output Formats
 
 ### Error List (OnlyErrorDiffViewer)
