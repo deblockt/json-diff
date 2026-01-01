@@ -8,7 +8,7 @@ This library provides:
 
 - **Readable diffs** between two JSON documents
 - **Similarity scoring** (0-100) to compare multiple JSON documents and find the most similar ones
-- **Fully customizable** comparison modes (strict, lenient, or mixed)
+- **Fully customizable** comparison modes (strict, lenient, or mixed) with easy-to-create custom matchers
 - **Multiple output formats** (patch file, text) with the ability to create custom formatters
 
 ## Installation
