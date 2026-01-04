@@ -35,7 +35,7 @@ public class LenientNumberPrimitivePartialMatcher implements PartialJsonMatcher<
     }
 
     @Override
-    public boolean manage(JsonNode expected, JsonNode received) {
+    public boolean manage(Path path, JsonNode received, JsonNode expected) {
         return expected.isNumber() && received.isNumber();
     }
 }

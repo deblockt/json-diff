@@ -4,9 +4,7 @@ import com.deblock.jsondiff.diff.MatchedPrimaryDiff;
 import com.deblock.jsondiff.diff.UnMatchedPrimaryDiff;
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.ObjectMapper;
-import tools.jackson.databind.node.ArrayNode;
 import tools.jackson.databind.node.NullNode;
-import tools.jackson.databind.node.ObjectNode;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,7 +18,7 @@ public class NullEqualsEmptyArrayMatcherTest {
         final var nullNode = NullNode.getInstance();
         final var arrayNode = MAPPER.createArrayNode();
 
-        assertTrue(matcher.manage(nullNode, arrayNode));
+        assertTrue(matcher.manage(null, arrayNode, nullNode));
     }
 
     @Test
@@ -28,7 +26,7 @@ public class NullEqualsEmptyArrayMatcherTest {
         final var arrayNode = MAPPER.createArrayNode();
         final var nullNode = NullNode.getInstance();
 
-        assertTrue(matcher.manage(arrayNode, nullNode));
+        assertTrue(matcher.manage(null, nullNode, arrayNode));
     }
 
     @Test
@@ -36,7 +34,7 @@ public class NullEqualsEmptyArrayMatcherTest {
         final var nullNode1 = NullNode.getInstance();
         final var nullNode2 = NullNode.getInstance();
 
-        assertFalse(matcher.manage(nullNode1, nullNode2));
+        assertFalse(matcher.manage(null, nullNode2, nullNode1));
     }
 
     @Test
@@ -44,7 +42,7 @@ public class NullEqualsEmptyArrayMatcherTest {
         final var array1 = MAPPER.createArrayNode();
         final var array2 = MAPPER.createArrayNode();
 
-        assertFalse(matcher.manage(array1, array2));
+        assertFalse(matcher.manage(null, array2, array1));
     }
 
     @Test
@@ -52,7 +50,7 @@ public class NullEqualsEmptyArrayMatcherTest {
         final var nullNode = NullNode.getInstance();
         final var objectNode = MAPPER.createObjectNode();
 
-        assertFalse(matcher.manage(nullNode, objectNode));
+        assertFalse(matcher.manage(null, objectNode, nullNode));
     }
 
     @Test

@@ -5,13 +5,6 @@ import com.deblock.jsondiff.diff.JsonDiff;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.node.ArrayNode;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 public class StrictJsonArrayPartialMatcher implements PartialJsonMatcher<ArrayNode> {
     @Override
     public JsonDiff jsonDiff(Path path, ArrayNode expectedValues, ArrayNode receivedValues, JsonMatcher jsonMatcher) {
@@ -38,7 +31,7 @@ public class StrictJsonArrayPartialMatcher implements PartialJsonMatcher<ArrayNo
     }
 
     @Override
-    public boolean manage(JsonNode expected, JsonNode received) {
+    public boolean manage(Path path, JsonNode received, JsonNode expected) {
         return expected.isArray() && received.isArray();
     }
 }

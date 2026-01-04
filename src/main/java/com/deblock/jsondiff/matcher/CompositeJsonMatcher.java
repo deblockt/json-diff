@@ -2,9 +2,6 @@ package com.deblock.jsondiff.matcher;
 
 import com.deblock.jsondiff.diff.*;
 import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.node.ArrayNode;
-import tools.jackson.databind.node.ObjectNode;
-import tools.jackson.databind.node.ValueNode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +18,7 @@ public class CompositeJsonMatcher implements JsonMatcher {
     @Override
     public JsonDiff diff(Path path, JsonNode expected, JsonNode received) {
         return this.matchers.stream()
-                .filter(matcher -> matcher.manage(expected, received))
+                .filter(matcher -> matcher.manage(path, received, expected))
                 .findFirst()
                 .map(matcher -> matcher.jsonDiff(path, expected, received, this))
                 .orElseGet(() -> new UnMatchedPrimaryDiff(path, expected, received));

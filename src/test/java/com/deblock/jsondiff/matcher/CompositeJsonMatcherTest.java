@@ -21,11 +21,11 @@ public class CompositeJsonMatcherTest {
         final var objectMatcher = (PartialJsonMatcher<ObjectNode>) Mockito.mock(PartialJsonMatcher.class);
         final var primitiveMatcher = (PartialJsonMatcher<ValueNode>) Mockito.mock(PartialJsonMatcher.class);
 
-        Mockito.when(arrayMatcher.manage(any(), any())).thenAnswer(inv ->
+        Mockito.when(arrayMatcher.manage(null, any(), any())).thenAnswer(inv ->
             ((JsonNode)inv.getArgument(0)).isArray() && ((JsonNode)inv.getArgument(1)).isArray());
-        Mockito.when(objectMatcher.manage(any(), any())).thenAnswer(inv ->
+        Mockito.when(objectMatcher.manage(null, any(), any())).thenAnswer(inv ->
             ((JsonNode)inv.getArgument(0)).isObject() && ((JsonNode)inv.getArgument(1)).isObject());
-        Mockito.when(primitiveMatcher.manage(any(), any())).thenAnswer(inv ->
+        Mockito.when(primitiveMatcher.manage(null, any(), any())).thenAnswer(inv ->
             ((JsonNode)inv.getArgument(0)).isValueNode() && ((JsonNode)inv.getArgument(1)).isValueNode());
 
         final var compositeMatcher = new CompositeJsonMatcher(
@@ -50,11 +50,11 @@ public class CompositeJsonMatcherTest {
         final var objectMatcher = (PartialJsonMatcher<ObjectNode>) Mockito.mock(PartialJsonMatcher.class);
         final var primitiveMatcher = (PartialJsonMatcher<ValueNode>) Mockito.mock(PartialJsonMatcher.class);
 
-        Mockito.when(arrayMatcher.manage(any(), any())).thenAnswer(inv ->
+        Mockito.when(arrayMatcher.manage(null, any(), any())).thenAnswer(inv ->
             ((JsonNode)inv.getArgument(0)).isArray() && ((JsonNode)inv.getArgument(1)).isArray());
-        Mockito.when(objectMatcher.manage(any(), any())).thenAnswer(inv ->
+        Mockito.when(objectMatcher.manage(null, any(), any())).thenAnswer(inv ->
             ((JsonNode)inv.getArgument(0)).isObject() && ((JsonNode)inv.getArgument(1)).isObject());
-        Mockito.when(primitiveMatcher.manage(any(), any())).thenAnswer(inv ->
+        Mockito.when(primitiveMatcher.manage(null, any(), any())).thenAnswer(inv ->
             ((JsonNode)inv.getArgument(0)).isValueNode() && ((JsonNode)inv.getArgument(1)).isValueNode());
 
         final var compositeMatcher = new CompositeJsonMatcher(
@@ -79,11 +79,11 @@ public class CompositeJsonMatcherTest {
         final var objectMatcher = (PartialJsonMatcher<ObjectNode>) Mockito.mock(PartialJsonMatcher.class);
         final var primitiveMatcher = (PartialJsonMatcher<ValueNode>) Mockito.mock(PartialJsonMatcher.class);
 
-        Mockito.when(arrayMatcher.manage(any(), any())).thenAnswer(inv ->
+        Mockito.when(arrayMatcher.manage(null, any(), any())).thenAnswer(inv ->
             ((JsonNode)inv.getArgument(0)).isArray() && ((JsonNode)inv.getArgument(1)).isArray());
-        Mockito.when(objectMatcher.manage(any(), any())).thenAnswer(inv ->
+        Mockito.when(objectMatcher.manage(null, any(), any())).thenAnswer(inv ->
             ((JsonNode)inv.getArgument(0)).isObject() && ((JsonNode)inv.getArgument(1)).isObject());
-        Mockito.when(primitiveMatcher.manage(any(), any())).thenAnswer(inv ->
+        Mockito.when(primitiveMatcher.manage(null, any(), any())).thenAnswer(inv ->
             ((JsonNode)inv.getArgument(0)).isValueNode() && ((JsonNode)inv.getArgument(1)).isValueNode());
 
         final var compositeMatcher = new CompositeJsonMatcher(
@@ -108,11 +108,11 @@ public class CompositeJsonMatcherTest {
         final var objectMatcher = (PartialJsonMatcher<ObjectNode>) Mockito.mock(PartialJsonMatcher.class);
         final var primitiveMatcher = (PartialJsonMatcher<ValueNode>) Mockito.mock(PartialJsonMatcher.class);
 
-        Mockito.when(arrayMatcher.manage(any(), any())).thenAnswer(inv ->
+        Mockito.when(arrayMatcher.manage(null, any(), any())).thenAnswer(inv ->
             ((JsonNode)inv.getArgument(0)).isArray() && ((JsonNode)inv.getArgument(1)).isArray());
-        Mockito.when(objectMatcher.manage(any(), any())).thenAnswer(inv ->
+        Mockito.when(objectMatcher.manage(null, any(), any())).thenAnswer(inv ->
             ((JsonNode)inv.getArgument(0)).isObject() && ((JsonNode)inv.getArgument(1)).isObject());
-        Mockito.when(primitiveMatcher.manage(any(), any())).thenAnswer(inv ->
+        Mockito.when(primitiveMatcher.manage(null, any(), any())).thenAnswer(inv ->
             ((JsonNode)inv.getArgument(0)).isValueNode() && ((JsonNode)inv.getArgument(1)).isValueNode());
 
         final var compositeMatcher = new CompositeJsonMatcher(
