@@ -1,128 +1,102 @@
 package com.deblock.jsondiff.matcher;
 
-
 public class PathMatcher {
-    public final PathMatcher.PathMatcherItem property;
-    public final PathMatcher next;
+    public final PathMatcherItem last;
+    public final PathMatcher previous;
 
     public static PathMatcher from(String path) {
         PathMatcher matcher = new PathMatcher();
-        for (String part: path.split("\\.")) {
+        for (String part : path.split("\\.")) {
+            if (part.isEmpty()) {
+                throw new IllegalArgumentException("path matcher part can not be empty");
+            }
             if (part.endsWith("]")) {
                 String index = part.substring(part.lastIndexOf("[") + 1, part.length() - 1);
-                matcher = matcher.add(new PathMatcherItem.ObjectProperty(part.substring(0, part.lastIndexOf("["))));
-                if ("*".equals(index)) {
-                    matcher = matcher.add(new PathMatcherItem.WilcardMatcherItem(Path.PathItem.ArrayIndex.class));
-                } else {
-                    matcher = matcher.add(new PathMatcherItem.ArrayIndex(Integer.parseInt(index)));
-                }
-            } else if ("*".equals(part)) {
-                matcher = matcher.add(new PathMatcherItem.WilcardMatcherItem(Path.PathItem.ObjectProperty.class));
+                matcher = matcher.add(PathMatcherItem.ofProperty(part.substring(0, part.lastIndexOf("["))));
+                matcher = matcher.add(PathMatcherItem.ofArrayIndex(index));
             } else {
-                matcher = matcher.add(new PathMatcher.PathMatcherItem.ObjectProperty(part));
+                matcher = matcher.add(PathMatcherItem.ofProperty(part));
             }
         }
         return matcher;
     }
 
-    public PathMatcher() {
+    private PathMatcher() {
         this(null, null);
     }
 
-    private PathMatcher(PathMatcher.PathMatcherItem property, PathMatcher next) {
-        this.property = property;
-        this.next = next;
+    private PathMatcher(PathMatcherItem last, PathMatcher previous) {
+        this.last = last;
+        this.previous = previous;
     }
 
-    private PathMatcher(PathMatcher.PathMatcherItem property) {
-        this.property = property;
-        this.next = null;
-    }
-
-    public PathMatcher add(PathMatcher.PathMatcherItem item) {
-        if (this.next == null) {
-            return new PathMatcher(this.property, new PathMatcher(item));
-        } else {
-            return new PathMatcher(this.property, this.next.add(item));
+    private PathMatcher add(PathMatcherItem item) {
+        if (this.last == null) {
+            return new PathMatcher(item, null);
         }
+        return new PathMatcher(item, this);
     }
 
     public boolean match(Path path) {
-        int pathLength = length(path);
-        int matcherLength = length();
+        if (this.last == null) {
+            return true;
+        }
 
-        if (matcherLength > pathLength) {
+        if (path == null || path.item() == null) {
             return false;
         }
 
-        // Align path to match from the end
-        Path alignedPath = path;
-        for (int i = 0; i < pathLength - matcherLength; i++) {
-            alignedPath = alignedPath.next;
-        }
-
-        return matchFromHere(alignedPath);
-    }
-
-    private int length() {
-        int count = 0;
-        PathMatcher current = this;
-        while (current != null && current.property != null) {
-            count++;
-            current = current.next;
-        }
-        return count;
-    }
-
-    private int length(Path path) {
-        int count = 0;
-        Path current = path;
-        while (current != null && current.property != null) {
-            count++;
-            current = current.next;
-        }
-        return count;
-    }
-
-    private boolean matchFromHere(Path path) {
-        if (this.property == null) {
-            return next == null || next.matchFromHere(path);
-        }
-        if (path == null || path.property == null) {
+        if (!this.last.match(path.item())) {
             return false;
         }
-        if (this.property.match(path.property)) {
-            if (next == null) {
-                return path.next == null || path.next.property == null;
-            }
-            return path.next != null && next.matchFromHere(path.next);
+
+        if (this.previous == null) {
+            return true;
         }
-        return false;
+
+        return this.previous.match(path.previous());
     }
 
+    @Override
     public String toString() {
-        return ((this.property == null) ? "$" : this.property) +
-                ((this.next == null) ? "" : "." + this.next);
+        StringBuilder sb = new StringBuilder("$");
+        appendReversed(sb);
+        return sb.toString();
     }
 
-    private interface PathMatcherItem {
-        static PathMatcherItem of(String property) {
-            return new PathMatcher.PathMatcherItem.ObjectProperty(property);
+    private void appendReversed(StringBuilder sb) {
+        if (last == null) return;
+        if (previous != null) {
+            previous.appendReversed(sb);
+        }
+        sb.append(".").append(last);
+    }
+
+    public interface PathMatcherItem {
+        static PathMatcherItem ofProperty(String property) {
+            if ("*".equals(property)) {
+                return new WildcardMatcherItem(Path.PathItem.ObjectProperty.class);
+            }
+            return new ObjectProperty(property);
         }
 
-        static PathMatcherItem of(Integer index) {
-            return new PathMatcher.PathMatcherItem.ArrayIndex(index);
+        static PathMatcherItem ofArrayIndex(String index) {
+            if ("*".equals(index)) {
+                return new WildcardMatcherItem(Path.PathItem.ArrayIndex.class);
+            }
+            return new ArrayIndex(Integer.parseInt(index));
         }
 
         boolean match(Path.PathItem pathItem);
 
-        class WilcardMatcherItem implements PathMatcherItem {
+        class WildcardMatcherItem implements PathMatcherItem {
             private final Class<? extends Path.PathItem> type;
 
-            public WilcardMatcherItem(Class<? extends Path.PathItem> type) {
+            public WildcardMatcherItem(Class<? extends Path.PathItem> type) {
                 this.type = type;
             }
 
+            @Override
             public String toString() {
                 return "*";
             }
