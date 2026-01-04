@@ -44,10 +44,10 @@ jobs:
         run: echo "tag=${{ inputs.version || steps.auto.outputs.new_tag }}" >> $GITHUB_OUTPUT
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build -Pversion=${{ steps.release.outputs.tag }}
 
       - name: Publish to staging
-        run: ./gradlew publishAllPublicationsToStagingRepository
+        run: ./gradlew publishAllPublicationsToStagingRepository -Pversion=${{ steps.release.outputs.tag }}
 
       - name: Deploy with JReleaser
         uses: jreleaser/release-action@v2
