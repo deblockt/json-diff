@@ -3,11 +3,10 @@ name: Release
 on:
   workflow_dispatch:
     inputs:
-      force-major:
-        description: 'Force major version bump'
+      version:
+        description: 'Version to release (leave empty for auto-detection based on commits)'
         required: false
-        type: boolean
-        default: false
+        type: string
 
 jobs:
   release:
@@ -29,9 +28,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Calculate and create tag
-        id: version
-        if: ${{ !inputs.force-major }}
+      - name: Auto-detect version
+        id: auto
+        if: ${{ !inputs.version }}
         uses: mathieudutour/github-tag-action@v6.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -39,20 +38,16 @@ jobs:
           release_branches: master
           tag_prefix: ""
 
-      - name: Force major version
-        id: major
-        if: ${{ inputs.force-major }}
+      - name: Manual version
+        id: manual
+        if: ${{ inputs.version }}
         run: |
-          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0")
-          IFS='.' read -r MAJOR MINOR PATCH <<< "$LATEST_TAG"
-          NEW_VERSION="$((MAJOR + 1)).0.0"
-          echo "new_tag=$NEW_VERSION" >> $GITHUB_OUTPUT
-          git tag "$NEW_VERSION"
-          git push origin "$NEW_VERSION"
+          git tag "${{ inputs.version }}"
+          git push origin "${{ inputs.version }}"
 
       - name: Set release tag
         id: release
-        run: echo "tag=${{ steps.version.outputs.new_tag || steps.major.outputs.new_tag }}" >> $GITHUB_OUTPUT
+        run: echo "tag=${{ inputs.version || steps.auto.outputs.new_tag }}" >> $GITHUB_OUTPUT
 
       - name: Build with Gradle
         run: ./gradlew build
