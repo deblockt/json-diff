@@ -1,0 +1,21 @@
+project:
+  name: json-diff
+  description: A customizable lib to perform a json-diff
+  links:
+    homepage: https://github.com/deblockt/json-diff
+  authors:
+    - Thomas Deblock
+  license: Apache-2.0
+  inceptionYear: "2022"
+
+signing:
+  active: ALWAYS
+  armored: true
+
+deploy:
+  maven:
+    mavenCentral:
+      sonatype:
+        active: ALWAYS
+        url: https://central.sonatype.com/api/v1/publisher
+        stagingRepository: build/staging-deploy
