@@ -37,13 +37,7 @@ jobs:
           default_bump: patch
           release_branches: master
           tag_prefix: ""
-
-      - name: Manual version
-        id: manual
-        if: ${{ inputs.version }}
-        run: |
-          git tag "${{ inputs.version }}"
-          git push origin "${{ inputs.version }}"
+          dry_run: true
 
       - name: Set release tag
         id: release
@@ -65,6 +59,11 @@ jobs:
           JRELEASER_GPG_PASSPHRASE: ${{ secrets.SIGNING_PASSWORD }}
           JRELEASER_GPG_SECRET_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create and push tag
+        run: |
+          git tag "${{ steps.release.outputs.tag }}"
+          git push origin "${{ steps.release.outputs.tag }}"
 
       - name: Create GitHub Release
         env:
