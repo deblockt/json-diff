@@ -11,8 +11,6 @@ project:
 signing:
   active: ALWAYS
   mode: MEMORY
-  pgp:
-    armored: true
 
 deploy:
   maven:
@@ -20,5 +18,6 @@ deploy:
       sonatype:
         active: ALWAYS
         url: https://central.sonatype.com/api/v1/publisher
+        namespace: io.github.deblockt
         stagingRepositories:
           - build/staging-deploy
