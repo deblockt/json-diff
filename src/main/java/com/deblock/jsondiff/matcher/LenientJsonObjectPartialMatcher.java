@@ -29,7 +29,7 @@ public class LenientJsonObjectPartialMatcher implements PartialJsonMatcher<Objec
     }
 
     @Override
-    public boolean manage(JsonNode expected, JsonNode received) {
+    public boolean manage(Path path, JsonNode received, JsonNode expected) {
         return expected.isObject() && received.isObject();
     }
 }

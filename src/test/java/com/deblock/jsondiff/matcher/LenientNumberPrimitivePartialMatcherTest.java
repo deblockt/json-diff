@@ -20,7 +20,7 @@ public class LenientNumberPrimitivePartialMatcherTest {
         final var number1 = IntNode.valueOf(10);
         final var number2 = DecimalNode.valueOf(BigDecimal.valueOf(20));
 
-        assertTrue(matcher.manage(number1, number2));
+        assertTrue(matcher.manage(null, number2, number1));
     }
 
     @Test
@@ -28,7 +28,7 @@ public class LenientNumberPrimitivePartialMatcherTest {
         final var string = StringNode.valueOf("test");
         final var number = IntNode.valueOf(10);
 
-        assertFalse(matcher.manage(string, number));
+        assertFalse(matcher.manage(null, number, string));
     }
 
     @Test
@@ -36,7 +36,7 @@ public class LenientNumberPrimitivePartialMatcherTest {
         final var number = IntNode.valueOf(10);
         final var string = StringNode.valueOf("test");
 
-        assertFalse(matcher.manage(number, string));
+        assertFalse(matcher.manage(null, string, number));
     }
 
     @Test
@@ -44,7 +44,7 @@ public class LenientNumberPrimitivePartialMatcherTest {
         final var string1 = StringNode.valueOf("test1");
         final var string2 = StringNode.valueOf("test2");
 
-        assertFalse(matcher.manage(string1, string2));
+        assertFalse(matcher.manage(null, string2, string1));
     }
 
     @Test
@@ -52,7 +52,7 @@ public class LenientNumberPrimitivePartialMatcherTest {
         final var bool1 = BooleanNode.TRUE;
         final var bool2 = BooleanNode.FALSE;
 
-        assertFalse(matcher.manage(bool1, bool2));
+        assertFalse(matcher.manage(null, bool2, bool1));
     }
 
     @Test

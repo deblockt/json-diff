@@ -2,37 +2,75 @@ package com.deblock.jsondiff.matcher;
 
 import java.util.Objects;
 
+/**
+ * Represents a JSON path (e.g., $.property.0.subproperty).
+ * Stored in reverse order (last element at head) for O(1) add operations
+ * and efficient end-matching in PathMatcher.
+ */
 public class Path {
     public static final Path ROOT = new Path();
 
-    public final PathItem property;
-    public final Path next;
+    private final PathItem last;
+    private final Path previous;
 
     public Path() {
         this(null, null);
     }
 
-    private Path(PathItem property, Path next) {
-        this.property = property;
-        this.next = next;
-    }
-
-    private Path(PathItem property) {
-        this.property = property;
-        this.next = null;
+    private Path(PathItem last, Path previous) {
+        this.last = last;
+        this.previous = previous;
     }
 
     public Path add(PathItem item) {
-        if (this.next == null) {
-            return new Path(this.property, new Path(item));
-        } else {
-            return new Path(this.property, this.next.add(item));
+        if (this.last == null) {
+            return new Path(item, null);
         }
+        return new Path(item, this);
     }
 
+    public PathItem item() {
+        return last;
+    }
+
+    /**
+     * Returns the path without its last element.
+     */
+    public Path previous() {
+        return previous == null ? ROOT : previous;
+    }
+
+    /**
+     * Returns the path items in natural order (from root to leaf).
+     * This is useful for traversing the path from start to end.
+     */
+    public java.util.List<PathItem> toList() {
+        java.util.List<PathItem> result = new java.util.ArrayList<>();
+        collectItems(result);
+        return result;
+    }
+
+    private void collectItems(java.util.List<PathItem> result) {
+        if (last == null) return;
+        if (previous != null) {
+            previous.collectItems(result);
+        }
+        result.add(last);
+    }
+
+    @Override
     public String toString() {
-        return ((this.property == null) ? "$" : this.property) +
-                ((this.next == null) ? "" : "." + this.next);
+        StringBuilder sb = new StringBuilder("$");
+        appendReversed(sb);
+        return sb.toString();
+    }
+
+    private void appendReversed(StringBuilder sb) {
+        if (last == null) return;
+        if (previous != null) {
+            previous.appendReversed(sb);
+        }
+        sb.append(".").append(last);
     }
 
     @Override
@@ -40,12 +78,12 @@ public class Path {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Path path = (Path) o;
-        return Objects.equals(property, path.property) && Objects.equals(next, path.next);
+        return Objects.equals(last, path.last) && Objects.equals(previous, path.previous);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(property, next);
+        return Objects.hash(last, previous);
     }
 
     public interface PathItem {

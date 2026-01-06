@@ -53,44 +53,54 @@ public class PatchDiffViewer implements JsonDiffViewer {
     public Object addPath(Object root, Path path, DiffValue diffValue) {
         if (path == null) {
             return diffValue;
-        } else if (path.property instanceof Path.PathItem.ArrayIndex) {
-            final var index = ((Path.PathItem.ArrayIndex) path.property).index;
+        }
+
+        var items = path.toList();
+        if (items.isEmpty()) {
+            return diffValue;
+        }
+
+        return addPathItems(root, items, 0, diffValue);
+    }
+
+    private Object addPathItems(Object root, java.util.List<Path.PathItem> items, int index, DiffValue diffValue) {
+        if (index >= items.size()) {
+            return diffValue;
+        }
+
+        var item = items.get(index);
+        boolean isLast = index == items.size() - 1;
+
+        if (item instanceof Path.PathItem.ArrayIndex arrayItem) {
+            final var arrayIndex = arrayItem.index;
             if (root == null) {
                 final var newRoot = new DiffValue.ArrayDiff();
-                newRoot.set(index, this.addPath(null, path.next, diffValue));
+                newRoot.set(arrayIndex, isLast ? diffValue : this.addPathItems(null, items, index + 1, diffValue));
                 return newRoot;
-            } else if (root instanceof DiffValue.ArrayDiff) {
-                final var array = (DiffValue.ArrayDiff) root;
-                if (array.hasIndex(index) && !(diffValue instanceof DiffValue.ExtraProperty)) {
-                    this.addPath(array.get(index), path.next, diffValue);
+            } else if (root instanceof DiffValue.ArrayDiff arrayDiff) {
+                if (arrayDiff.hasIndex(arrayIndex) && !(diffValue instanceof DiffValue.ExtraProperty)) {
+                    this.addPathItems(arrayDiff.get(arrayIndex), items, index + 1, diffValue);
                 } else {
-                    array.set(index, this.addPath(array.get(index), path.next, diffValue));
+                    arrayDiff.set(arrayIndex, isLast ? diffValue : this.addPathItems(arrayDiff.get(arrayIndex), items, index + 1, diffValue));
                 }
-                return array;
+                return arrayDiff;
             } else {
-                throw new IllegalArgumentException("The path " + path + " is not an array");
+                throw new IllegalArgumentException("The path is not an array at index " + arrayIndex);
             }
-        } else if (path.property instanceof Path.PathItem.ObjectProperty) {
-            final var propertyName = ((Path.PathItem.ObjectProperty) path.property).property;
+        } else if (item instanceof Path.PathItem.ObjectProperty objectItem) {
+            final var propertyName = objectItem.property;
             if (root == null) {
                 final var newRoot = new HashMap<String, Object>();
-                newRoot.put(propertyName, this.addPath(null, path.next, diffValue));
+                newRoot.put(propertyName, isLast ? diffValue : this.addPathItems(null, items, index + 1, diffValue));
                 return newRoot;
-            } else if (root instanceof Map) {
-                final var map = (Map<String, Object>) root;
-                map.put(propertyName, this.addPath(map.get(propertyName), path.next, diffValue));
+            } else if (root instanceof Map map) {
+                map.put(propertyName, isLast ? diffValue : this.addPathItems(map.get(propertyName), items, index + 1, diffValue));
                 return map;
             } else {
-                throw new IllegalArgumentException("The path " + path + " is not an object");
-            }
-        } else if (path.property == null) {
-            if (path.next != null) {
-                return this.addPath(root, path.next, diffValue);
-            } else {
-                return diff;
+                throw new IllegalArgumentException("The path is not an object at property " + propertyName);
             }
         } else {
-            throw new IllegalArgumentException("Unsupported path type " + path.property.getClass());
+            throw new IllegalArgumentException("Unsupported path item type " + item.getClass());
         }
     }
 
@@ -99,9 +109,9 @@ public class PatchDiffViewer implements JsonDiffViewer {
     }
 
     private String toDiff(Object diff, String indent, String startOfLine, String endOfLineExpected, String endOfLineActual) {
-        if (diff instanceof DiffValue.ArrayDiff) {
+        if (diff instanceof DiffValue.ArrayDiff arrayDiff) {
             final var arrayContent = new StringBuilder();
-            final var allObjects = ((DiffValue.ArrayDiff) diff).allObjects();
+            final var allObjects = arrayDiff.allObjects();
             for (int i = 0; i < allObjects.size(); ++i) {
                 final var object = allObjects.get(i);
                 arrayContent
@@ -115,10 +125,9 @@ public class PatchDiffViewer implements JsonDiffViewer {
                         .append("\n");
             }
             return startOfLine + " [\n" + arrayContent + indent + " ]" + endOfLineExpected;
-        } else if (diff instanceof Map) {
+        } else if (diff instanceof Map diffObject) {
             final var objectContent = new StringBuilder();
-            final var diffObject = (Map<String, Object>) diff;
-            final var keys = new ArrayList<>(diffObject.keySet());
+            final var keys = new ArrayList<String>(diffObject.keySet());
             for (int i = 0; i < keys.size(); ++i) {
                 final var object = diffObject.get(keys.get(i));
                 final var isObjectNotADiff = object instanceof DiffValue.ArrayDiff || object instanceof Map;
@@ -135,19 +144,18 @@ public class PatchDiffViewer implements JsonDiffViewer {
                         .append("\n");
             }
             return startOfLine + " {\n" + objectContent + indent + " }" + endOfLineExpected;
-        } else if (diff instanceof DiffValue.MatchingProperty) {
+        } else if (diff instanceof DiffValue.MatchingProperty matchingDiff) {
             if (endOfLineActual.equals(endOfLineExpected)) {
-                return " " + indent + ((DiffValue.MatchingProperty) diff).value.toString() + endOfLineActual;
+                return " " + indent + matchingDiff.value.toString() + endOfLineActual;
             } else {
-                return "-" + indent + ((DiffValue.MatchingProperty) diff).value.toString() + endOfLineActual + "\n" +
-                       "+" + indent + ((DiffValue.MatchingProperty) diff).value.toString() + endOfLineExpected;
+                return "-" + indent + matchingDiff.value.toString() + endOfLineActual + "\n" +
+                       "+" + indent + matchingDiff.value.toString() + endOfLineExpected;
             }
-        } else if (diff instanceof DiffValue.MissingProperty) {
-            return "+" + indent + ((DiffValue.MissingProperty) diff).value.toString() + endOfLineExpected;
-        } else if (diff instanceof DiffValue.ExtraProperty) {
-            return "-" + indent + ((DiffValue.ExtraProperty) diff).value.toString() + endOfLineActual;
-        } else if (diff instanceof DiffValue.NonMatchingProperty) {
-            final var value = ((DiffValue.NonMatchingProperty) diff);
+        } else if (diff instanceof DiffValue.MissingProperty missingPropertyDiff) {
+            return "+" + indent + missingPropertyDiff.value.toString() + endOfLineExpected;
+        } else if (diff instanceof DiffValue.ExtraProperty extraPropertyDiff) {
+            return "-" + indent + extraPropertyDiff.value.toString() + endOfLineActual;
+        } else if (diff instanceof DiffValue.NonMatchingProperty value) {
             return "-" + indent + value.value.toString() + endOfLineActual + "\n+" + indent + value.expected.toString() + endOfLineExpected;
         } else {
             throw new IllegalArgumentException("Unsupported diff type " + diff.getClass());
@@ -214,8 +222,8 @@ public class PatchDiffViewer implements JsonDiffViewer {
             public final List<DiffValue.ExtraProperty> extraProperty = new ArrayList<>();
 
             public void set(int index, Object object) {
-                if (object instanceof DiffValue.ExtraProperty) {
-                    extraProperty.add((DiffValue.ExtraProperty) object);
+                if (object instanceof DiffValue.ExtraProperty extraPropertyDiff) {
+                    extraProperty.add(extraPropertyDiff);
                 } else {
                     while (diffs.size() <= index) {
                         diffs.add(null);

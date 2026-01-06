@@ -19,7 +19,7 @@ public class NullEqualsEmptyArrayMatcher implements PartialJsonMatcher<JsonNode>
     }
 
     @Override
-    public boolean manage(JsonNode expected, JsonNode received) {
+    public boolean manage(Path path, JsonNode received, JsonNode expected) {
         return (expected.isNull() && received.isArray())
                  || (received.isNull() && expected.isArray());
     }
