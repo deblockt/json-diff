@@ -165,6 +165,7 @@ final var mixedMatcher = new CompositeJsonMatcher(
 | Matcher | Description |
 |---------|-------------|
 | `NullEqualsEmptyArrayMatcher` | Treats `null` and `[]` as equivalent |
+| `IgnoredPathMatcher` | Ignores specified fields during comparison |
 
 ## Treating Null as Empty Array
 
@@ -195,6 +196,64 @@ System.out.println(diff.similarityRate()); // 100.0
 - Place `NullEqualsEmptyArrayMatcher` **before** other matchers in the constructor
 - This matcher only handles `null` vs empty array `[]`, not missing properties
 - Non-empty arrays do not match `null`
+
+## Ignoring path
+
+The `IgnoredPathMatcher` allows you to ignore specific fields during comparison. This is useful for fields like timestamps, IDs, or other dynamic values that you don't want to compare.
+
+```java
+final var jsonMatcher = new CompositeJsonMatcher(
+    new IgnoredPathMatcher("timestamp", "id"),  // Must be first
+    new LenientJsonArrayPartialMatcher(),
+    new LenientJsonObjectPartialMatcher(),
+    new StrictPrimitivePartialMatcher()
+);
+
+// These will match with 100% similarity:
+final var diff = DiffGenerator.diff(
+    "{\"name\": \"John\", \"timestamp\": \"2024-01-01\"}",
+    "{\"name\": \"John\", \"timestamp\": \"2024-12-31\"}",
+    jsonMatcher
+);
+
+System.out.println(diff.similarityRate()); // 100.0
+```
+
+### Path Patterns
+
+The `IgnoredPathMatcher` supports various path patterns:
+
+| Pattern | Description | Example |
+|---------|-------------|---------|
+| `name` | Matches field `name` at any level | Ignores `$.name`, `$.user.name`, `$.data.user.name` |
+| `user.name` | Matches `name` under `user` | Ignores `$.user.name`, `$.data.user.name` |
+| `*.name` | Wildcard for any property | Ignores `$.foo.name`, `$.bar.name` |
+| `items[0]` | Matches specific array index | Ignores `$.items[0]` |
+| `items[*]` | Wildcard for any array index | Ignores `$.items[0]`, `$.items[1]`, etc. |
+| `items[*].id` | Field in any array element | Ignores `$.items[0].id`, `$.items[5].id` |
+
+### Examples
+
+```java
+// Ignore a single field everywhere
+new IgnoredPathMatcher("createdAt")
+
+// Ignore multiple fields
+new IgnoredPathMatcher("createdAt", "updatedAt", "id")
+
+// Ignore nested field
+new IgnoredPathMatcher("metadata.timestamp")
+
+// Ignore field in all array elements
+new IgnoredPathMatcher("users[*].password")
+
+// Combine multiple patterns
+new IgnoredPathMatcher("id", "*.createdAt", "items[*].internalId")
+```
+
+**Important:**
+- Place `IgnoredPathMatcher` **before** other matchers in the constructor
+- Patterns match against the end of the path, so `name` matches `$.user.name` as well as `$.name`
 
 ## Advanced Example
 

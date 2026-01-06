@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class IgnoringFieldsIntegrationTest {
+public class IgnoredPathIntegrationTest {
 
     private final CompositeJsonMatcher jsonMatcher = new CompositeJsonMatcher(
-            new IgnoringFieldMatcher("foo"),
+            new IgnoredPathMatcher("foo"),
             new LenientJsonArrayPartialMatcher(),
             new LenientJsonObjectPartialMatcher(),
             new StrictPrimitivePartialMatcher()

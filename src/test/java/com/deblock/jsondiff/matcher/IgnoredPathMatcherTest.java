@@ -10,14 +10,14 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class IgnoringFieldMatcherTest {
+class IgnoredPathMatcherTest {
 
     @Nested
     class ManageMethod {
 
         @Test
         void shouldMatchExactPath() {
-            var matcher = new IgnoringFieldMatcher("name");
+            var matcher = new IgnoredPathMatcher("name");
             var path = Path.ROOT.add(Path.PathItem.of("name"));
 
             assertTrue(matcher.manage(path, null, null));
@@ -25,7 +25,7 @@ class IgnoringFieldMatcherTest {
 
         @Test
         void shouldMatchEndOfPath() {
-            var matcher = new IgnoringFieldMatcher("name");
+            var matcher = new IgnoredPathMatcher("name");
             var path = Path.ROOT
                     .add(Path.PathItem.of("user"))
                     .add(Path.PathItem.of("name"));
@@ -35,7 +35,7 @@ class IgnoringFieldMatcherTest {
 
         @Test
         void shouldNotMatchDifferentPath() {
-            var matcher = new IgnoringFieldMatcher("name");
+            var matcher = new IgnoredPathMatcher("name");
             var path = Path.ROOT.add(Path.PathItem.of("age"));
 
             assertFalse(matcher.manage(path, null, null));
@@ -43,7 +43,7 @@ class IgnoringFieldMatcherTest {
 
         @Test
         void shouldMatchNestedPath() {
-            var matcher = new IgnoringFieldMatcher("user.name");
+            var matcher = new IgnoredPathMatcher("user.name");
             var path = Path.ROOT
                     .add(Path.PathItem.of("data"))
                     .add(Path.PathItem.of("user"))
@@ -54,7 +54,7 @@ class IgnoringFieldMatcherTest {
 
         @Test
         void shouldNotMatchPartialNestedPath() {
-            var matcher = new IgnoringFieldMatcher("user.name");
+            var matcher = new IgnoredPathMatcher("user.name");
             var path = Path.ROOT
                     .add(Path.PathItem.of("name"));
 
@@ -63,7 +63,7 @@ class IgnoringFieldMatcherTest {
 
         @Test
         void shouldMatchWithWildcardProperty() {
-            var matcher = new IgnoringFieldMatcher("*.name");
+            var matcher = new IgnoredPathMatcher("*.name");
             var path = Path.ROOT
                     .add(Path.PathItem.of("user"))
                     .add(Path.PathItem.of("name"));
@@ -73,7 +73,7 @@ class IgnoringFieldMatcherTest {
 
         @Test
         void shouldMatchArrayIndex() {
-            var matcher = new IgnoringFieldMatcher("items[0]");
+            var matcher = new IgnoredPathMatcher("items[0]");
             var path = Path.ROOT
                     .add(Path.PathItem.of("items"))
                     .add(Path.PathItem.of(0));
@@ -83,7 +83,7 @@ class IgnoringFieldMatcherTest {
 
         @Test
         void shouldMatchArrayWildcard() {
-            var matcher = new IgnoringFieldMatcher("items[*].id");
+            var matcher = new IgnoredPathMatcher("items[*].id");
             var path = Path.ROOT
                     .add(Path.PathItem.of("items"))
                     .add(Path.PathItem.of(5))
@@ -94,7 +94,7 @@ class IgnoringFieldMatcherTest {
 
         @Test
         void shouldMatchAnyOfMultiplePatterns() {
-            var matcher = new IgnoringFieldMatcher("name", "age", "email");
+            var matcher = new IgnoredPathMatcher("name", "age", "email");
             var pathName = Path.ROOT.add(Path.PathItem.of("name"));
             var pathAge = Path.ROOT.add(Path.PathItem.of("age"));
             var pathEmail = Path.ROOT.add(Path.PathItem.of("email"));
@@ -108,7 +108,7 @@ class IgnoringFieldMatcherTest {
 
         @Test
         void shouldWorkWithListConstructor() {
-            var matcher = new IgnoringFieldMatcher(List.of("name", "age"));
+            var matcher = new IgnoredPathMatcher(List.of("name", "age"));
             var pathName = Path.ROOT.add(Path.PathItem.of("name"));
             var pathAge = Path.ROOT.add(Path.PathItem.of("age"));
 
@@ -118,7 +118,7 @@ class IgnoringFieldMatcherTest {
 
         @Test
         void shouldNotMatchRootPath() {
-            var matcher = new IgnoringFieldMatcher("name");
+            var matcher = new IgnoredPathMatcher("name");
 
             assertFalse(matcher.manage(Path.ROOT, null, null));
         }
@@ -129,7 +129,7 @@ class IgnoringFieldMatcherTest {
 
         @Test
         void shouldReturnMatchedDiffWithFullSimilarity() {
-            var matcher = new IgnoringFieldMatcher("name");
+            var matcher = new IgnoredPathMatcher("name");
             var path = Path.ROOT.add(Path.PathItem.of("name"));
             var expected = StringNode.valueOf("John");
             var received = StringNode.valueOf("Jane");
@@ -142,7 +142,7 @@ class IgnoringFieldMatcherTest {
 
         @Test
         void shouldReturnMatchedDiffEvenWithDifferentTypes() {
-            var matcher = new IgnoringFieldMatcher("value");
+            var matcher = new IgnoredPathMatcher("value");
             var path = Path.ROOT.add(Path.PathItem.of("value"));
             var expected = StringNode.valueOf("100");
             var received = IntNode.valueOf(100);
@@ -154,7 +154,7 @@ class IgnoringFieldMatcherTest {
 
         @Test
         void shouldReturnMatchedDiffForNestedPath() {
-            var matcher = new IgnoringFieldMatcher("user.timestamp");
+            var matcher = new IgnoredPathMatcher("user.timestamp");
             var path = Path.ROOT
                     .add(Path.PathItem.of("user"))
                     .add(Path.PathItem.of("timestamp"));

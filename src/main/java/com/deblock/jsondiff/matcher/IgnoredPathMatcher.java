@@ -7,16 +7,16 @@ import tools.jackson.databind.JsonNode;
 import java.util.Arrays;
 import java.util.List;
 
-public class IgnoringFieldMatcher implements PartialJsonMatcher {
-    private final List<PathMatcher> fieldsToIgnore;
+public class IgnoredPathMatcher implements PartialJsonMatcher {
+    private final List<PathMatcher> pathsToIgnore;
 
-    public IgnoringFieldMatcher(List<String> paths) {
-        this.fieldsToIgnore = paths.stream()
+    public IgnoredPathMatcher(List<String> paths) {
+        this.pathsToIgnore = paths.stream()
                 .map(PathMatcher::from)
                 .toList();
     }
 
-    public IgnoringFieldMatcher(String ...paths) {
+    public IgnoredPathMatcher(String ...paths) {
         this(Arrays.stream(paths).toList());
     }
 
@@ -27,6 +27,6 @@ public class IgnoringFieldMatcher implements PartialJsonMatcher {
 
     @Override
     public boolean manage(Path path, JsonNode expected, JsonNode received) {
-        return fieldsToIgnore.stream().anyMatch(pattern -> pattern.match(path));
+        return pathsToIgnore.stream().anyMatch(pattern -> pattern.match(path));
     }
 }
